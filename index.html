@@ -12,6 +12,13 @@
             margin: 0;
         }
 
+        .block {
+            background-color: #f0f0f0;
+            padding: 20px;
+            border: 2px solid #333;
+            border-radius: 10px;
+        }
+
         #clock {
             width: 200px;
             height: 200px;
@@ -49,15 +56,17 @@
     </style>
 </head>
 <body>
-    <div id="clock">
-        <div id="hour"></div>
-        <div id="minute"></div>
-        <div id="second"></div>
+    <div class="block">
+        <h1>Orologio Analogico</h1>
+        <div id="clock">
+            <div id="hour"></div>
+            <div id="minute"></div>
+            <div id="second"></div>
+        </div>
     </div>
 
     <script>
         function updateClock() {
-            const clock = document.getElementById("clock");
             const hourHand = document.getElementById("hour");
             const minuteHand = document.getElementById("minute");
             const secondHand = document.getElementById("second");
