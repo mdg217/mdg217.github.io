@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pannello di Controllo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .box {
+            width: 200px;
+            height: 200px;
+            margin: 10px;
+            padding: 20px;
+            border-radius: 20px;
+            background-color: #f0f0f0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <h1>Pannello di Controllo</h1>
+    <div class="container">
+        <div class="box">
+            <h2>Script 1</h2>
+            <p>Descrizione dello script 1.</p>
+            <button onclick="runScript1()">Esegui Script 1</button>
+        </div>
+        <div class="box">
+            <h2>Script 2</h2>
+            <p>Descrizione dello script 2.</p>
+            <button onclick="runScript2()">Esegui Script 2</button>
+        </div>
+        <!-- Aggiungi altri box per gli altri script qui -->
+    </div>
+
+    <script>
+        function runScript1() {
+            // Esegui lo script 1
+            alert("Script 1 eseguito!");
+        }
+
+        function runScript2() {
+            // Esegui lo script 2
+            alert("Script 2 eseguito!");
+        }
+        // Aggiungi altre funzioni per gli altri script qui
+    </script>
+</body>
+</html>
