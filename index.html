@@ -10,17 +10,43 @@
     <div class="widget">
         <div class="widget-header">
             <div class="widget-title">Meteo</div>
-            <div class="widget-time">10:30 AM</div>
+            <div class="widget-time">
+                <span id="current-time">Caricamento...</span>
+            </div>
         </div>
         <div class="widget-content">
             <div class="weather-icon">
                 <img src="weather-icon.png" alt="Weather Icon">
             </div>
             <div class="weather-info">
-                <div class="weather-location">New York, NY</div>
+                <div class="weather-location">Roma, Italy</div>
                 <div class="weather-temperature">72°F</div>
             </div>
         </div>
     </div>
+
+    <script>
+        function updateTime() {
+            const currentTimeElement = document.getElementById('current-time');
+            fetch('http://worldtimeapi.org/api/timezone/Europe/Rome')
+                .then(response => response.json())
+                .then(data => {
+                    const datetime = new Date(data.datetime);
+                    const hours = datetime.getHours().toString().padStart(2, '0');
+                    const minutes = datetime.getMinutes().toString().padStart(2, '0');
+                    const timeString = `${hours}:${minutes}`;
+                    currentTimeElement.textContent = timeString;
+                })
+                .catch(error => {
+                    console.error('Errore nel recupero dell\'orario:', error);
+                });
+        }
+
+        // Aggiorna l'orario ogni minuto
+        setInterval(updateTime, 60000);
+
+        // Chiamata iniziale per visualizzare l'orario corrente
+        updateTime();
+    </script>
 </body>
 </html>
