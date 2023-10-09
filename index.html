@@ -7,19 +7,23 @@
     <style>
         body {
             display: flex;
-            flex-wrap: wrap;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
         }
 
+        .widget-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 20px;
+            max-width: 600px;
+        }
+
         .widget {
-            width: calc(50% - 20px);
             padding: 20px;
             background-color: #f0f0f0;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            margin: 10px;
             text-align: center;
         }
 
@@ -37,34 +41,36 @@
     </style>
 </head>
 <body>
-    <div class="widget" id="clock">
-        <h2>Orologio</h2>
-        <p id="clock-time">Loading...</p>
-    </div>
+    <div class="widget-container">
+        <div class="widget" id="clock">
+            <h2>Orologio</h2>
+            <p id="clock-time">Loading...</p>
+        </div>
 
-    <div class="widget" id="calendar">
-        <h2>Calendario</h2>
-        <p>Contenuto del calendario...</p>
-    </div>
+        <div class="widget" id="calendar">
+            <h2>Calendario</h2>
+            <p>Contenuto del calendario...</p>
+        </div>
 
-    <div class="widget" id="python-scripts">
-        <h2>Script Python</h2>
-        <p>Contenuto dello script Python...</p>
-    </div>
+        <div class="widget" id="python-scripts">
+            <h2>Script Python</h2>
+            <p>Contenuto dello script Python...</p>
+        </div>
 
-    <div class="widget" id="python-scripts">
-        <h2>Script Python</h2>
-        <p>Contenuto dello script Python...</p>
-    </div>
+        <div class="widget" id="python-scripts">
+            <h2>Script Python</h2>
+            <p>Contenuto dello script Python...</p>
+        </div>
 
-    <div class="widget" id="python-scripts">
-        <h2>Script Python</h2>
-        <p>Contenuto dello script Python...</p>
-    </div>
+        <div class="widget" id="python-scripts">
+            <h2>Script Python</h2>
+            <p>Contenuto dello script Python...</p>
+        </div>
 
-    <div class="widget" id="python-scripts">
-        <h2>Script Python</h2>
-        <p>Contenuto dello script Python...</p>
+        <div class="widget" id="python-scripts">
+            <h2>Script Python</h2>
+            <p>Contenuto dello script Python...</p>
+        </div>
     </div>
 
     <script>
