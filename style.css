@@ -1,0 +1,55 @@
+/* Reset di default per il CSS */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.widget {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    padding: 20px;
+    text-align: center;
+}
+
+.widget-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.widget-title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.widget-time {
+    font-size: 14px;
+    color: #888888;
+}
+
+.weather-icon img {
+    max-width: 100px;
+}
+
+.weather-location {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.weather-temperature {
+    font-size: 24px;
+    margin-top: 5px;
+}
