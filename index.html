@@ -14,48 +14,66 @@
         }
 
         .box {
-            width: 200px;
-            height: 200px;
             margin: 10px;
             padding: 20px;
             border-radius: 20px;
             background-color: #f0f0f0;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         }
+
+        .small-box {
+            width: 200px;
+            height: 150px;
+        }
+
+        .large-box {
+            width: 400px;
+            height: 300px;
+        }
     </style>
 </head>
 <body>
     <h1>Pannello di Controllo</h1>
     <div class="container">
-        <div class="box">
+        <div class="box small-box">
             <h2>Script 1</h2>
             <p>Descrizione dello script 1.</p>
             <button onclick="runScript1()">Esegui Script 1</button>
         </div>
-        <div class="box">
+        <div class="box small-box">
             <h2>Script 2</h2>
             <p>Descrizione dello script 2.</p>
             <button onclick="runScript2()">Esegui Script 2</button>
         </div>
-        <div class="box">
+        <div class="box large-box">
             <h2>Script 3</h2>
             <p>Descrizione dello script 3.</p>
             <button onclick="runScript3()">Esegui Script 3</button>
         </div>
-        <div class="box">
+        <div class="box small-box">
             <h2>Script 4</h2>
             <p>Descrizione dello script 4.</p>
             <button onclick="runScript4()">Esegui Script 4</button>
         </div>
-        <div class="box">
+        <div class="box small-box">
             <h2>Script 5</h2>
             <p>Descrizione dello script 5.</p>
             <button onclick="runScript5()">Esegui Script 5</button>
         </div>
-        <div class="box">
+        <div class="box large-box">
             <h2>Script 6</h2>
             <p>Descrizione dello script 6.</p>
             <button onclick="runScript6()">Esegui Script 6</button>
+        </div>
+        <div class="box small-box">
+            <h2>Script 7</h2>
+            <p>Descrizione dello script 7.</p>
+            <button onclick="runScript7()">Esegui Script 7</button>
+        </div>
+        <div class="box small-box">
+            <h2>Script 8</h2>
+            <p>Descrizione dello script 8.</p>
+            <button onclick="runScript8()">Esegui Script 8</button>
         </div>
         <!-- Aggiungi altri box per gli altri script qui -->
     </div>
@@ -89,6 +107,16 @@
         function runScript6() {
             // Esegui lo script 6
             alert("Script 6 eseguito!");
+        }
+
+        function runScript7() {
+            // Esegui lo script 7
+            alert("Script 7 eseguito!");
+        }
+
+        function runScript8() {
+            // Esegui lo script 8
+            alert("Script 8 eseguito!");
         }
         // Aggiungi altre funzioni per gli altri script qui
     </script>
