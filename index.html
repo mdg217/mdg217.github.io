@@ -21,54 +21,51 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         }
 
+        .small-box {
+            width: 200px;
+            height: 150px;
+        }
+
         .large-box {
             width: 400px;
             height: 300px;
+        }
+
+        #clock {
+            font-size: 24px;
         }
     </style>
 </head>
 <body>
     <h1>Pannello di Controllo</h1>
     <div class="container">
-        <div class="box large-box">
-            <h2>Calendario</h2>
-            <div id="calendar"></div>
-            <h3>Aggiungi un evento</h3>
-            <input type="text" id="eventoTitolo" placeholder="Titolo">
-            <input type="date" id="eventoData">
-            <button onclick="aggiungiEvento()">Aggiungi</button>
+        <div class="box small-box">
+            <h2>Script 1</h2>
+            <p>Descrizione dello script 1.</p>
+            <button onclick="runScript1()">Esegui Script 1</button>
+            <div id="clock"></div>
         </div>
+        <!-- Aggiungi altri box per gli altri script qui -->
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.css" rel="stylesheet">
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var calendarEl = document.getElementById('calendar');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                events: [] // Inizialmente, nessun evento
-            });
-            calendar.render();
+        function runScript1() {
+            // Esegui lo script 1
+            alert("Script 1 eseguito!");
+        }
 
-            function aggiungiEvento() {
-                var eventoTitolo = document.getElementById('eventoTitolo').value;
-                var eventoData = document.getElementById('eventoData').value;
+        function updateClock() {
+            const clockElement = document.getElementById("clock");
+            const now = new Date();
+            const formattedTime = now.toLocaleTimeString();
+            clockElement.textContent = formattedTime;
+        }
 
-                if (eventoTitolo && eventoData) {
-                    calendar.addEvent({
-                        title: eventoTitolo,
-                        start: eventoData
-                    });
+        // Aggiorna l'orologio ogni secondo
+        setInterval(updateClock, 1000);
 
-                    // Pulisci i campi di input
-                    document.getElementById('eventoTitolo').value = '';
-                    document.getElementById('eventoData').value = '';
-                } else {
-                    alert("Inserisci un titolo e una data per l'evento.");
-                }
-            }
-        });
+        // Esegui l'aggiornamento iniziale dell'orologio
+        updateClock();
     </script>
 </body>
 </html>
