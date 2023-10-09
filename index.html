@@ -3,50 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iOS Widget</title>
-    <link rel="stylesheet" href="style.css">
+    <title>iOS Widget-Like Interface</title>
+    <style>
+        body {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .widget {
+            width: calc(50% - 20px);
+            padding: 20px;
+            background-color: #f0f0f0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            margin: 10px;
+            text-align: center;
+        }
+
+        #clock {
+            font-size: 24px;
+        }
+
+        #calendar {
+            font-size: 18px;
+        }
+
+        #python-scripts {
+            font-size: 16px;
+        }
+    </style>
 </head>
 <body>
-    <div class="widget">
-        <div class="widget-header">
-            <div class="widget-title">Meteo</div>
-            <div class="widget-time">
-                <span id="current-time">Caricamento...</span>
-            </div>
-        </div>
-        <div class="widget-content">
-            <div class="weather-icon">
-                <img src="weather-icon.png" alt="Weather Icon">
-            </div>
-            <div class="weather-info">
-                <div class="weather-location">Roma, Italy</div>
-                <div class="weather-temperature">72°F</div>
-            </div>
-        </div>
+    <div class="widget" id="clock">
+        <h2>Orologio</h2>
+        <p id="clock-time">Loading...</p>
+    </div>
+
+    <div class="widget" id="calendar">
+        <h2>Calendario</h2>
+        <p>Contenuto del calendario...</p>
+    </div>
+
+    <div class="widget" id="python-scripts">
+        <h2>Script Python</h2>
+        <p>Contenuto dello script Python...</p>
+    </div>
+
+    <div class="widget" id="python-scripts">
+        <h2>Script Python</h2>
+        <p>Contenuto dello script Python...</p>
+    </div>
+
+    <div class="widget" id="python-scripts">
+        <h2>Script Python</h2>
+        <p>Contenuto dello script Python...</p>
+    </div>
+
+    <div class="widget" id="python-scripts">
+        <h2>Script Python</h2>
+        <p>Contenuto dello script Python...</p>
     </div>
 
     <script>
-        function updateTime() {
-            const currentTimeElement = document.getElementById('current-time');
-            fetch('http://worldtimeapi.org/api/timezone/Europe/Rome')
-                .then(response => response.json())
-                .then(data => {
-                    const datetime = new Date(data.datetime);
-                    const hours = datetime.getHours().toString().padStart(2, '0');
-                    const minutes = datetime.getMinutes().toString().padStart(2, '0');
-                    const timeString = `${hours}:${minutes}`;
-                    currentTimeElement.textContent = timeString;
-                })
-                .catch(error => {
-                    console.error('Errore nel recupero dell\'orario:', error);
-                });
+        // Aggiorna l'orologio
+        function updateClock() {
+            const now = new Date();
+            const clockTime = now.toLocaleTimeString('it-IT');
+            document.getElementById('clock-time').textContent = clockTime;
         }
-
-        // Aggiorna l'orario ogni minuto
-        setInterval(updateTime, 60000);
-
-        // Chiamata iniziale per visualizzare l'orario corrente
-        updateTime();
+        
+        setInterval(updateClock, 1000);
+        
+        // Puoi aggiungere qui lo script Python che si autoaggiorna ogni minuto
     </script>
 </body>
 </html>
