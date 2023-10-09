@@ -1,64 +1,79 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Pannello di Controllo</title>
+    <title>Orologio Analogico</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-        }
-
-        .container {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
-
-        .box {
-            margin: 10px;
-            padding: 20px;
-            border-radius: 20px;
-            background-color: #f0f0f0;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .small-box {
-            width: 200px;
-            height: 150px;
-        }
-
-        .large-box {
-            width: 400px;
-            height: 300px;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
         }
 
         #clock {
-            font-size: 24px;
+            width: 200px;
+            height: 200px;
+            border: 10px solid #333;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        #hour, #minute, #second {
+            position: absolute;
+            width: 50%;
+            height: 2px;
+            background: #333;
+            top: 50%;
+            transform-origin: 100%;
+            transform: translateY(-50%);
+            transition-timing-function: steps(1, end);
+        }
+
+        #hour {
+            height: 8px;
+            z-index: 3;
+        }
+
+        #minute {
+            height: 4px;
+            z-index: 2;
+        }
+
+        #second {
+            background: red;
+            height: 2px;
+            z-index: 1;
         }
     </style>
 </head>
 <body>
-    <h1>Pannello di Controllo</h1>
-    <div class="container">
-        <div class="box small-box">
-            <h2>Script 1</h2>
-            <p>Descrizione dello script 1.</p>
-            <button onclick="runScript1()">Esegui Script 1</button>
-            <div id="clock"></div>
-        </div>
-        <!-- Aggiungi altri box per gli altri script qui -->
+    <div id="clock">
+        <div id="hour"></div>
+        <div id="minute"></div>
+        <div id="second"></div>
     </div>
 
     <script>
-        function runScript1() {
-            // Esegui lo script 1
-            alert("Script 1 eseguito!");
-        }
-
         function updateClock() {
-            const clockElement = document.getElementById("clock");
+            const clock = document.getElementById("clock");
+            const hourHand = document.getElementById("hour");
+            const minuteHand = document.getElementById("minute");
+            const secondHand = document.getElementById("second");
+
             const now = new Date();
-            const formattedTime = now.toLocaleTimeString();
-            clockElement.textContent = formattedTime;
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+
+            const hourDeg = (360 / 12) * hours + (360 / 12) * (minutes / 60);
+            const minuteDeg = (360 / 60) * minutes + (360 / 60) * (seconds / 60);
+            const secondDeg = (360 / 60) * seconds;
+
+            hourHand.style.transform = `rotate(${hourDeg}deg)`;
+            minuteHand.style.transform = `rotate(${minuteDeg}deg)`;
+            secondHand.style.transform = `rotate(${secondDeg}deg)`;
         }
 
         // Aggiorna l'orologio ogni secondo
