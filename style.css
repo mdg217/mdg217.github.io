@@ -1536,10 +1536,7 @@ body.mode-usb .preview-action-btn {
     display: none;
   }
 
-  .window-title {
-    display: none;
-  }
-
+  .window-title,
   .window-title-sep {
     display: none;
   }
