@@ -1,0 +1,1550 @@
+/* ==========================================================================
+   1. VARIABILI & RESET
+   ========================================================================== */
+:root {
+  --bg-desk-top: #181c24;
+  --bg-desk-bottom: #101319;
+  --grid-line: rgba(255, 255, 255, 0.03);
+
+  /* Hardware Beige / Retro Palette (PC Floppy Mode) */
+  --hw-light: #e5e1d6;
+  --hw-mid: #cbc5b6;
+  --hw-dark: #9e9788;
+
+  /* LCD Screen (Floppy) */
+  --lcd-bg: #17281e;
+  --lcd-text: #4ef08b;
+  --lcd-dim: rgba(78, 240, 139, 0.35);
+
+  /* Modern Titanium / OLED Palette (Smartphone USB Mode) */
+  --usb-chassis-top: #2c3342;
+  --usb-chassis-bot: #1b202b;
+  --usb-accent: #38bdf8;
+  --usb-oled-bg: #090d16;
+
+  /* Window UI */
+  --win-bg: #f6f5f0;
+  --win-surface: #ffffff;
+  --win-border: #262b36;
+  --win-ink: #1b202b;
+
+  /* Typography */
+  --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  font-family: var(--font-ui);
+  color: #f0f2f5;
+  background:
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px) 0 0 / 36px 36px,
+    linear-gradient(0deg, var(--grid-line) 1px, transparent 1px) 0 0 / 36px 36px,
+    radial-gradient(circle at 50% 25%, #252c3a 0%, var(--bg-desk-top) 55%, var(--bg-desk-bottom) 100%);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Visibilità condizionale tra modalità PC (Floppy) e Smartphone (USB) */
+body.mode-floppy .usb-only {
+  display: none !important;
+}
+
+body.mode-usb .floppy-only {
+  display: none !important;
+}
+
+/* ==========================================================================
+   2. BARRA SUPERIORE STILE OS
+   ========================================================================== */
+.os-topbar {
+  height: 38px;
+  padding: 0 14px;
+  background: rgba(15, 18, 25, 0.9);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  position: relative;
+  z-index: 30;
+}
+
+.os-topbar-left,
+.os-topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.os-logo-badge {
+  background: #4ef08b;
+  color: #0d1a12;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.72rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+body.mode-usb .os-logo-badge {
+  background: #38bdf8;
+  color: #081826;
+}
+
+.os-title {
+  font-family: var(--font-mono);
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+}
+
+.os-separator {
+  opacity: 0.3;
+}
+
+.os-hint {
+  color: #9aa4b8;
+  font-size: 0.75rem;
+}
+
+.os-btn-mode,
+.os-btn-sfx {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #e4e8f0;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  padding: 3px 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.os-btn-mode:hover,
+.os-btn-sfx:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.sfx-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4ef08b;
+  box-shadow: 0 0 6px #4ef08b;
+}
+
+body.mode-usb .sfx-dot:not(.muted) {
+  background: #38bdf8;
+  box-shadow: 0 0 6px #38bdf8;
+}
+
+.sfx-dot.muted {
+  background: #6b7280;
+  box-shadow: none;
+}
+
+.os-clock {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: #cbd5e1;
+  min-width: 62px;
+  text-align: right;
+}
+
+/* Pill per finestra ridotta a icona */
+.minimized-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #283244;
+  border: 1px solid #4b5c7a;
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 3px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  animation: pulsePill 2s infinite;
+  white-space: nowrap;
+}
+
+.minimized-pill:hover {
+  background: #36435b;
+}
+
+@keyframes pulsePill {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(78, 240, 139, 0.25); }
+  50% { box-shadow: 0 0 0 5px rgba(78, 240, 139, 0); }
+}
+
+/* ==========================================================================
+   3. WORKSPACE & LETTORE FLOPPY DISK (MODALITÀ PC)
+   ========================================================================== */
+.workspace {
+  height: calc(100vh - 38px);
+  height: calc(100dvh - 38px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 16px 16px;
+  position: relative;
+}
+
+.drive-stage,
+.usb-hub-stage {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.floppy-drive {
+  width: min(470px, 92vw);
+  background: linear-gradient(180deg, var(--hw-light) 0%, var(--hw-mid) 100%);
+  border-radius: 14px;
+  border: 2px solid #f4f1ea;
+  box-shadow:
+    0 22px 45px rgba(0, 0, 0, 0.55),
+    inset 0 -5px 0 var(--hw-dark),
+    inset 0 2px 0 rgba(255, 255, 255, 0.75);
+  padding: 16px 22px 20px;
+  position: relative;
+  color: #2b2925;
+}
+
+.drive-top-bezel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.drive-brand {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  color: #24221e;
+}
+
+.brand-sub {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  color: #635e54;
+  letter-spacing: 0.6px;
+}
+
+.drive-vents {
+  display: flex;
+  gap: 5px;
+}
+
+.drive-vents span {
+  width: 4px;
+  height: 16px;
+  border-radius: 2px;
+  background: #8b8578;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+
+.drive-faceplate {
+  background: #d7d2c4;
+  border: 1px solid #b4ae9f;
+  border-radius: 10px;
+  padding: 14px;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.drive-lcd {
+  background: var(--lcd-bg);
+  border: 3px solid #3c3a35;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-family: var(--font-mono);
+  color: var(--lcd-text);
+  box-shadow:
+    inset 0 2px 10px rgba(0, 0, 0, 0.85),
+    0 1px 0 rgba(255, 255, 255, 0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+.drive-lcd::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.16) 0px,
+    rgba(0, 0, 0, 0.16) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  pointer-events: none;
+}
+
+.lcd-line-top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.66rem;
+  color: var(--lcd-dim);
+  margin-bottom: 3px;
+}
+
+.lcd-line-main {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 8px rgba(78, 240, 139, 0.5);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.drive-slot-housing {
+  position: relative;
+  padding: 6px 0;
+}
+
+.drive-slot {
+  height: 18px;
+  background: #141518;
+  border-radius: 4px;
+  border: 2px solid #7d776b;
+  box-shadow:
+    inset 0 4px 8px rgba(0, 0, 0, 0.95),
+    0 1px 0 rgba(255, 255, 255, 0.65);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slot-shutter {
+  position: absolute;
+  inset: 1px 4px;
+  background: linear-gradient(180deg, #4b4f58 0%, #2a2d33 100%);
+  border-radius: 2px;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+.drive-slot.is-open .slot-shutter {
+  transform: translateY(-100%);
+  opacity: 0.2;
+}
+
+.inserted-disk-tab {
+  position: absolute;
+  width: 78%;
+  height: 7px;
+  border-radius: 2px;
+  background: transparent;
+  transform: translateY(16px);
+  opacity: 0;
+  transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease;
+}
+
+.inserted-disk-tab.visible {
+  transform: translateY(0);
+  opacity: 1;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.35);
+}
+
+.drive-slot-notch {
+  width: 54px;
+  height: 7px;
+  background: #23252a;
+  margin: -1px auto 0;
+  border-radius: 0 0 5px 5px;
+  border: 1px solid #7d776b;
+  border-top: none;
+}
+
+.drive-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.led-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.drive-led {
+  width: 12px;
+  height: 7px;
+  border-radius: 2px;
+  background: #3d423e;
+  border: 1px solid #222;
+  transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.drive-led.reading {
+  background: #f59e0b;
+  box-shadow: 0 0 10px #f59e0b;
+  animation: ledBlink 0.22s infinite alternate;
+}
+
+.drive-led.active {
+  background: #22c55e;
+  box-shadow: 0 0 9px #22c55e;
+}
+
+@keyframes ledBlink {
+  from { opacity: 0.45; }
+  to { opacity: 1; }
+}
+
+.led-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #5b564c;
+}
+
+.eject-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(180deg, #ece9e0 0%, #c8c2b2 100%);
+  border: 1px solid #8a8375;
+  border-radius: 5px;
+  padding: 5px 14px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #2b2925;
+  box-shadow: 0 3px 0 #7b7568;
+  cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.1s ease, opacity 0.2s ease;
+}
+
+.eject-button:hover:not(:disabled) {
+  background: linear-gradient(180deg, #f5f2ea 0%, #d4cec0 100%);
+}
+
+.eject-button:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 0 1px 0 #7b7568;
+}
+
+.eject-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.drive-foot {
+  position: absolute;
+  bottom: -7px;
+  width: 44px;
+  height: 7px;
+  background: #1f2229;
+  border-radius: 0 0 4px 4px;
+}
+
+.drive-foot-left { left: 32px; }
+.drive-foot-right { right: 32px; }
+
+/* ==========================================================================
+   4. HUB MODERNO USB 3.2 (MODALITÀ SMARTPHONE)
+   ========================================================================== */
+.usb-hub-stage {
+  align-items: flex-start;
+  padding-top: 8px;
+}
+
+.usb-hub {
+  width: min(370px, 92vw);
+  background: linear-gradient(165deg, var(--usb-chassis-top) 0%, var(--usb-chassis-bot) 100%);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow:
+    0 20px 44px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  position: relative;
+}
+
+.usb-hub-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.usb-hub-brand {
+  display: flex;
+  flex-direction: column;
+}
+
+.usb-brand-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.96rem;
+  letter-spacing: 0.8px;
+  color: #f8fafc;
+}
+
+.usb-brand-sub {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: #94a3b8;
+  letter-spacing: 0.6px;
+}
+
+.usb-hub-led-bar {
+  width: 46px;
+  height: 5px;
+  border-radius: 999px;
+  background: #334155;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.usb-hub-led-bar.reading {
+  background: #38bdf8;
+  box-shadow: 0 0 12px #38bdf8;
+  animation: ledBlink 0.2s infinite alternate;
+}
+
+.usb-hub-led-bar.active {
+  background: #4ef08b;
+  box-shadow: 0 0 12px #4ef08b;
+}
+
+/* Schermo OLED del Hub USB */
+.usb-oled {
+  background: var(--usb-oled-bg);
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  border-radius: 9px;
+  padding: 9px 12px;
+  font-family: var(--font-mono);
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+.usb-oled-top {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.62rem;
+  color: #38bdf8;
+  margin-bottom: 3px;
+}
+
+.usb-oled-main {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #f8fafc;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.usb-hub-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 2px;
+}
+
+.usb-port-assembly {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.usb-port-label {
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  color: #94a3b8;
+  margin-bottom: 4px;
+  letter-spacing: 0.5px;
+}
+
+.usb-port-slot {
+  width: 72px;
+  height: 16px;
+  background: #090b10;
+  border: 2px solid #94a3b8;
+  border-radius: 3px;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.95);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+}
+
+.usb-port-tongue {
+  width: 54px;
+  height: 4px;
+  background: #0284c7;
+  border-radius: 1px;
+}
+
+.usb-port-pins {
+  position: absolute;
+  inset: 2px 11px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.usb-port-pins span {
+  width: 6px;
+  height: 3px;
+  background: #fbbf24;
+  border-radius: 1px;
+}
+
+/* Pennetta USB che sporge fisicamente dalla porta quando collegata */
+.plugged-usb-stick {
+  position: absolute;
+  top: calc(100% - 2px);
+  width: 58px;
+  height: 62px;
+  border-radius: 4px 4px 10px 10px;
+  background: var(--plugged-color, #2563eb);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.65);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 4px 8px;
+  opacity: 0;
+  transform: translateY(-10px) scaleY(0.8);
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: 4;
+}
+
+.plugged-usb-stick.visible {
+  opacity: 1;
+  transform: translateY(0) scaleY(1);
+}
+
+.plugged-usb-led {
+  width: 14px;
+  height: 3px;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: 0 0 8px #ffffff;
+  animation: ledBlink 0.6s infinite alternate;
+}
+
+.plugged-usb-name {
+  font-family: var(--font-mono);
+  font-size: 0.54rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.usb-eject-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 7px 13px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #f8fafc;
+  cursor: pointer;
+  transition: background 0.15s ease, opacity 0.2s ease;
+}
+
+.usb-eject-btn:hover:not(:disabled) {
+  background: rgba(56, 189, 248, 0.22);
+  border-color: #38bdf8;
+}
+
+.usb-eject-btn:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+/* ==========================================================================
+   5. ANTEPRIMA FLUTTUANTE (HOVER / TAP PREVIEW CARD)
+   ========================================================================== */
+.disk-preview-card {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: min(290px, 90vw);
+  background: rgba(17, 22, 33, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  padding: 12px 14px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(12px);
+  pointer-events: none;
+  opacity: 0;
+  transform: translate3d(0, 8px, 0) scale(0.96);
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  z-index: 40;
+}
+
+.disk-preview-card.visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+/* Su smartphone permettiamo il tap diretto sul pulsante della card anteprima */
+body.mode-usb .disk-preview-card.visible {
+  pointer-events: auto;
+}
+
+.preview-header {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: #4ef08b;
+  margin-bottom: 4px;
+}
+
+body.mode-usb .preview-header {
+  color: #38bdf8;
+}
+
+.preview-title {
+  font-family: var(--font-display);
+  font-size: 0.96rem;
+  color: #ffffff;
+  margin-bottom: 4px;
+}
+
+.preview-text {
+  font-size: 0.77rem;
+  line-height: 1.38;
+  color: #cbd5e1;
+  margin-bottom: 9px;
+}
+
+.preview-action-btn {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #f8fafc;
+  text-align: left;
+  cursor: pointer;
+}
+
+body.mode-usb .preview-action-btn {
+  background: rgba(56, 189, 248, 0.18);
+  border-color: rgba(56, 189, 248, 0.45);
+  color: #bae6fd;
+  text-align: center;
+}
+
+/* ==========================================================================
+   6. LIBRERIA INFERIORE: FLOPPY RACK (PC) & USB DOCK (SMARTPHONE)
+   ========================================================================== */
+.library-stage {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-top: 6px;
+}
+
+.shelf-container,
+.usb-dock-container {
+  width: min(920px, 96vw);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.disk-rack {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: clamp(10px, 2vw, 22px);
+  padding: 0 12px;
+  position: relative;
+  z-index: 10;
+}
+
+.shelf-ledge {
+  width: 100%;
+  height: 26px;
+  margin-top: -10px;
+  background: linear-gradient(180deg, #3b4252 0%, #232834 100%);
+  border-top: 2px solid #59637a;
+  border-radius: 6px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 12;
+}
+
+.shelf-label {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 1.5px;
+  color: #9aa5bd;
+}
+
+/* Singolo Floppy Disk 3.5" */
+.floppy-disk {
+  width: clamp(112px, 15vw, 148px);
+  height: clamp(122px, 16vw, 156px);
+  border-radius: 7px 14px 6px 6px;
+  background: var(--disk-color, #2563eb);
+  border: 2px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    0 10px 20px rgba(0, 0, 0, 0.45),
+    inset 0 2px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -4px 0 rgba(0, 0, 0, 0.25);
+  padding: 0 10px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  position: relative;
+  transform-origin: bottom center;
+  transition:
+    transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.24s ease,
+    opacity 0.2s ease;
+}
+
+.floppy-disk:hover:not(.is-inserted):not(.is-disabled),
+.floppy-disk:focus-visible:not(.is-inserted):not(.is-disabled),
+.floppy-disk.is-previewed:not(.is-inserted):not(.is-disabled) {
+  transform: translateY(-24px) rotate(-2deg) scale(1.04);
+  box-shadow:
+    0 22px 32px rgba(0, 0, 0, 0.65),
+    0 0 0 2px rgba(255, 255, 255, 0.45);
+  z-index: 20;
+  outline: none;
+}
+
+.floppy-disk.is-inserted {
+  opacity: 0.24;
+  transform: translateY(6px) scale(0.96);
+  cursor: default;
+  filter: grayscale(0.5);
+}
+
+.floppy-disk.is-disabled {
+  pointer-events: none;
+}
+
+.disk-shutter {
+  width: 66%;
+  height: 34%;
+  margin: 0 auto;
+  background: linear-gradient(90deg, #cbd5e1 0%, #f8fafc 45%, #94a3b8 100%);
+  border-radius: 0 0 4px 4px;
+  border: 1px solid #475569;
+  border-top: none;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 7px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.disk-shutter-hole {
+  width: 24%;
+  height: 68%;
+  background: #1e293b;
+  border-radius: 2px;
+}
+
+.disk-label {
+  width: 100%;
+  height: 55%;
+  background: #faf8f2;
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+  text-align: left;
+}
+
+.disk-label-stripe {
+  height: 9px;
+  width: 100%;
+  background: var(--disk-accent, #1d4ed8);
+}
+
+.disk-label-body {
+  flex: 1;
+  padding: 5px 7px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 12px,
+    rgba(148, 163, 184, 0.35) 13px
+  );
+}
+
+.disk-code {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  color: #475569;
+}
+
+.disk-name {
+  font-family: var(--font-display);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.15;
+}
+
+.disk-tag {
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  color: #64748b;
+}
+
+/* ==========================================================================
+   7. PENNETTE USB & DOCK MODERNO (SMARTPHONE)
+   ========================================================================== */
+.usb-rack {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: clamp(7px, 2.2vw, 18px);
+  padding: 0 6px;
+  position: relative;
+  z-index: 10;
+}
+
+.usb-dock-base {
+  width: min(440px, 96vw);
+  height: 26px;
+  margin-top: -8px;
+  background: linear-gradient(180deg, #334155 0%, #1e293b 100%);
+  border-top: 2px solid #38bdf8;
+  border-radius: 8px;
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 12;
+}
+
+.usb-dock-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 1.2px;
+  color: #bae6fd;
+}
+
+/* Singola Pennetta USB */
+.usb-stick {
+  width: clamp(56px, 16.5vw, 76px);
+  height: clamp(114px, 28vw, 134px);
+  background: transparent;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  transform-origin: bottom center;
+  transition:
+    transform 0.24s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.2s ease,
+    filter 0.2s ease;
+}
+
+.usb-stick:hover:not(.is-inserted):not(.is-disabled),
+.usb-stick:focus-visible:not(.is-inserted):not(.is-disabled),
+.usb-stick.is-previewed:not(.is-inserted):not(.is-disabled) {
+  transform: translateY(-20px) scale(1.06);
+  z-index: 20;
+  outline: none;
+}
+
+.usb-stick.is-inserted {
+  opacity: 0.22;
+  transform: translateY(6px) scale(0.95);
+  cursor: default;
+  filter: grayscale(0.6);
+}
+
+.usb-stick.is-disabled {
+  pointer-events: none;
+}
+
+/* Connettore metallico USB Type-A superiore */
+.usb-connector {
+  width: 54%;
+  height: 23%;
+  background: linear-gradient(90deg, #94a3b8 0%, #f1f5f9 45%, #64748b 100%);
+  border: 1px solid #475569;
+  border-bottom: none;
+  border-radius: 3px 3px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  padding: 0 4px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.usb-connector-hole {
+  width: 26%;
+  height: 36%;
+  background: #1e293b;
+  border-radius: 1px;
+}
+
+/* Corpo colorato della pennetta USB */
+.usb-body {
+  width: 100%;
+  flex: 1;
+  background: linear-gradient(160deg, var(--disk-color, #2563eb) 0%, var(--disk-accent, #1d4ed8) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px 6px 12px 12px;
+  box-shadow:
+    0 10px 20px rgba(0, 0, 0, 0.5),
+    inset 0 2px 0 rgba(255, 255, 255, 0.35),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.3);
+  padding: 6px 4px 7px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.usb-stick.is-previewed .usb-body,
+.usb-stick:hover .usb-body {
+  box-shadow:
+    0 16px 28px rgba(0, 0, 0, 0.65),
+    0 0 0 2px rgba(255, 255, 255, 0.6);
+}
+
+.usb-stick-led {
+  width: 14px;
+  height: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.45);
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.usb-stick.is-previewed .usb-stick-led,
+.usb-stick:hover .usb-stick-led {
+  background: #ffffff;
+  box-shadow: 0 0 8px #ffffff;
+}
+
+.usb-stick-label {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-family: var(--font-display);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  white-space: nowrap;
+}
+
+.usb-stick-cap {
+  font-family: var(--font-mono);
+  font-size: 0.54rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(0, 0, 0, 0.22);
+  padding: 1px 5px;
+  border-radius: 999px;
+}
+
+/* Clone animato durante inserimento/espulsione */
+.flying-disk-clone {
+  position: fixed;
+  margin: 0;
+  z-index: 60;
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   8. FINESTRA POP-UP INTERNA CON I 3 BOTTONI
+   ========================================================================== */
+.window-backdrop {
+  position: fixed;
+  inset: 38px 0 0 0;
+  background: rgba(10, 14, 22, 0.55);
+  backdrop-filter: blur(4px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 50;
+}
+
+.window-backdrop.is-open {
+  display: flex;
+  animation: fadeBackdrop 0.2s ease forwards;
+}
+
+@keyframes fadeBackdrop {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.os-window {
+  width: min(820px, 95vw);
+  height: min(600px, 84vh);
+  height: min(600px, 84dvh);
+  background: var(--win-bg);
+  color: var(--win-ink);
+  border: 2px solid var(--win-border);
+  border-radius: 10px;
+  box-shadow: 0 28px 65px rgba(0, 0, 0, 0.68);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: popWindow 0.24s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.os-window.is-maximized {
+  width: calc(100vw - 16px);
+  height: calc(100dvh - 50px);
+  border-radius: 8px;
+}
+
+@keyframes popWindow {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.window-titlebar {
+  height: 40px;
+  padding: 0 12px;
+  background: #232936;
+  color: #f8fafc;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #141820;
+}
+
+.window-title-left {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  overflow: hidden;
+}
+
+.window-disk-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 3px;
+  background: #3b82f6;
+  flex-shrink: 0;
+}
+
+.window-filename {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  color: #93c5fd;
+  white-space: nowrap;
+}
+
+.window-title-sep {
+  opacity: 0.4;
+}
+
+.window-title {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* I 3 bottoni di controllo finestra */
+.window-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.win-btn {
+  width: 26px;
+  height: 24px;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: #333c4f;
+  color: #f8fafc;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.14s ease, transform 0.1s ease;
+}
+
+.win-btn:hover {
+  background: #47536b;
+}
+
+.win-btn:active {
+  transform: scale(0.94);
+}
+
+.win-btn-close:hover {
+  background: #dc2626;
+  border-color: #f87171;
+}
+
+.window-subbar {
+  padding: 6px 14px;
+  background: #e7e5dc;
+  border-bottom: 1px solid #d1cec2;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: #57534e;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.window-subbar span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.window-body {
+  flex: 1;
+  padding: 20px 22px;
+  overflow-y: auto;
+  line-height: 1.55;
+  user-select: text;
+}
+
+.window-statusbar {
+  padding: 6px 14px;
+  background: #eae8e0;
+  border-top: 1px solid #d4d1c5;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: #57534e;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* ==========================================================================
+   9. COMPONENTI INTERNI ALLE PAGINE DEL PORTFOLIO
+   ========================================================================== */
+.hero-card {
+  background: var(--win-surface);
+  border: 1px solid #dcd9ce;
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.hero-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: #e0f2fe;
+  color: #0369a1;
+  padding: 3px 9px;
+  border-radius: 5px;
+  margin-bottom: 8px;
+}
+
+.hero-name {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  color: #0f172a;
+  margin-bottom: 6px;
+}
+
+.hero-bio {
+  font-size: 0.9rem;
+  color: #334155;
+}
+
+.section-heading {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #475569;
+  margin: 16px 0 10px;
+  padding-bottom: 5px;
+  border-bottom: 1px dashed #cbd5e1;
+}
+
+.timeline-list {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.timeline-item {
+  background: var(--win-surface);
+  border: 1px solid #dcd9ce;
+  border-left: 4px solid #2563eb;
+  border-radius: 8px;
+  padding: 12px 15px;
+}
+
+.timeline-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.timeline-role {
+  font-weight: 700;
+  font-size: 0.94rem;
+  color: #0f172a;
+}
+
+.timeline-period {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  background: #f1f5f9;
+  color: #334155;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.timeline-org {
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: #2563eb;
+  margin-bottom: 5px;
+}
+
+.timeline-desc {
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.skill-group {
+  background: var(--win-surface);
+  border: 1px solid #dcd9ce;
+  border-radius: 9px;
+  padding: 13px 15px;
+}
+
+.skill-group-title {
+  font-family: var(--font-display);
+  font-size: 0.93rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 9px;
+}
+
+.skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.skill-tag {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #1e293b;
+  padding: 4px 8px;
+  border-radius: 5px;
+}
+
+.pub-card {
+  background: var(--win-surface);
+  border: 1px solid #dcd9ce;
+  border-radius: 9px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+
+.pub-meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.pub-venue {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: #fef3c7;
+  color: #92400e;
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.pub-year {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: #64748b;
+}
+
+.pub-title {
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 5px;
+}
+
+.pub-desc {
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 11px;
+}
+
+.contact-card {
+  background: var(--win-surface);
+  border: 1px solid #dcd9ce;
+  border-radius: 9px;
+  padding: 12px 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.contact-info {
+  overflow: hidden;
+}
+
+.contact-label {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  color: #64748b;
+  margin-bottom: 2px;
+}
+
+.contact-value {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.action-btn {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: #1e293b;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  padding: 6px 10px;
+  cursor: pointer;
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: background 0.15s ease;
+}
+
+.action-btn:hover {
+  background: #334155;
+}
+
+/* Responsive mobile */
+@media (max-width: 768px) {
+  .os-hint,
+  .os-separator {
+    display: none;
+  }
+
+  .window-title {
+    display: none;
+  }
+
+  .window-title-sep {
+    display: none;
+  }
+
+  .window-body {
+    padding: 15px;
+  }
+}
