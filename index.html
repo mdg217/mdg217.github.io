@@ -1,43 +1,2029 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test Sito</title>
-    <style>
-        body {
-            font-family: system-ui, -apple-system, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f4f4f9;
-            color: #333;
-            text-align: center;
-        }
-        .box {
-            background: white;
-            padding: 2rem 3rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            color: #2e7d32;
-            margin-bottom: 0.5rem;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MarcoOS v2.6 — Marco De Gregorio | Software Engineer &amp; PhD Student</title>
+  <style>
+    /* ==========================================================================
+       1. RESET & LAYOUT PRINCIPALE (100vw x 100vh, ZERO SCROLLING)
+       ========================================================================== */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100vw;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: radial-gradient(circle at 50% 30%, #1e293b 0%, #0f172a 100%);
+      color: #f8fafc;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      user-select: none;
+    }
+
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+
+    /* Griglia tecnica sottile sullo sfondo */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(to right, rgba(148, 163, 184, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(148, 163, 184, 0.04) 1px, transparent 1px);
+      background-size: 36px 36px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ==========================================================================
+       2. TOP STATUS BAR (ALTEZZA FISSA 38px)
+       ========================================================================== */
+    .top-bar {
+      position: relative;
+      z-index: 30;
+      width: 100%;
+      height: 38px;
+      padding: 0 16px;
+      background: rgba(15, 23, 42, 0.88);
+      border-bottom: 1px solid rgba(56, 189, 248, 0.22);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .top-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981;
+      flex-shrink: 0;
+    }
+
+    .os-brand {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: #e2e8f0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .top-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .top-pill-btn {
+      height: 24px;
+      padding: 0 10px;
+      border-radius: 5px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      background: rgba(30, 41, 59, 0.9);
+      color: #cbd5e1;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    }
+
+    .top-pill-btn:hover {
+      background: #334155;
+      border-color: #38bdf8;
+      color: #ffffff;
+    }
+
+    /* Tab finestra minimizzata (nascosto finché non si minimizza una finestra) */
+    .restore-tab {
+      display: none;
+      background: rgba(14, 165, 233, 0.2);
+      border-color: #38bdf8;
+      color: #7dd3fc;
+    }
+
+    .restore-tab.visible {
+      display: inline-flex;
+    }
+
+    .clock-display {
+      font-size: 11px;
+      font-weight: 600;
+      color: #94a3b8;
+      padding-left: 4px;
+    }
+
+    /* ==========================================================================
+       3. CENTER-UPPER STAGE: LETTORE FLOPPY DISK 3.5" "MDG-3500"
+       ========================================================================== */
+    .drive-stage {
+      position: relative;
+      z-index: 20;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 8px 16px 0;
+      flex-shrink: 0;
+    }
+
+    .drive-unit {
+      position: relative;
+      width: 90%;
+      max-width: 440px;
+      height: 165px;
+      background: linear-gradient(180deg, #e2e8f0 0%, #cbd5e1 16%, #cbd5e1 86%, #94a3b8 100%);
+      border-radius: 14px;
+      border: 2px solid #64748b;
+      padding: 12px 16px 14px;
+      box-shadow:
+        0 20px 45px rgba(2, 6, 23, 0.7),
+        0 0 0 1px rgba(255, 255, 255, 0.15),
+        inset 0 2px 2px rgba(255, 255, 255, 0.85),
+        inset 0 -3px 6px rgba(51, 65, 85, 0.45);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* Intestazione hardware MDG-3500 + Feritoie di aerazione */
+    .drive-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 18px;
+    }
+
+    .drive-badge-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .drive-model-badge {
+      background: #1e293b;
+      color: #38bdf8;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      padding: 2px 7px;
+      border-radius: 4px;
+      border: 1px solid #475569;
+    }
+
+    .drive-sub-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: #475569;
+      letter-spacing: 0.05em;
+    }
+
+    .drive-vents {
+      display: flex;
+      gap: 5px;
+    }
+
+    .drive-vent {
+      width: 20px;
+      height: 4px;
+      border-radius: 2px;
+      background: #64748b;
+      box-shadow: inset 0 1px 1px rgba(15, 23, 42, 0.75), 0 1px 0 rgba(255, 255, 255, 0.7);
+    }
+
+    /* Pannello frontale incassato */
+    .drive-bezel {
+      background: linear-gradient(180deg, #b8c4d4 0%, #a5b4c7 100%);
+      border-radius: 9px;
+      border: 1.5px solid #64748b;
+      padding: 10px 12px;
+      box-shadow:
+        inset 0 2px 5px rgba(15, 23, 42, 0.35),
+        0 1px 0 rgba(255, 255, 255, 0.75);
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+
+    /* Display LCD monocromatico verde/ciano retroilluminato */
+    .drive-lcd {
+      height: 28px;
+      background: #061b17;
+      border: 2px solid #334155;
+      border-radius: 5px;
+      padding: 0 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.9), 0 1px 0 rgba(255, 255, 255, 0.55);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .drive-lcd::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.22) 0px,
+        rgba(0, 0, 0, 0.22) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+      pointer-events: none;
+    }
+
+    .lcd-status-text {
+      color: #2dd4bf;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-shadow: 0 0 8px rgba(45, 212, 191, 0.75);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .lcd-capacity {
+      color: rgba(45, 212, 191, 0.65);
+      font-size: 10px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* Fessura orizzontale inserimento dischetto */
+    .drive-slot {
+      position: relative;
+      width: 100%;
+      height: 16px;
+      background: #090d16;
+      border-radius: 4px;
+      border: 2px solid #475569;
+      box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.95), 0 1px 0 rgba(255, 255, 255, 0.75);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Incavo inferiore centrale per il pollice */
+    .drive-slot-notch {
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 58px;
+      height: 6px;
+      background: #94a3b8;
+      border: 1px solid #64748b;
+      border-top: none;
+      border-radius: 0 0 5px 5px;
+      z-index: 2;
+    }
+
+    /* Bordo visivo del dischetto inserito che sporge leggermente dalla fessura */
+    .inserted-disk-lip {
+      position: absolute;
+      top: 4px;
+      width: 64%;
+      height: 10px;
+      border-radius: 0 0 4px 4px;
+      border: 1px solid rgba(15, 23, 42, 0.8);
+      border-top: none;
+      box-shadow: 0 3px 6px rgba(0, 0, 0, 0.6);
+      opacity: 0;
+      transform: translateY(-6px);
+      transition: opacity 0.2s ease, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .inserted-disk-lip.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Riga LED attività + Pulsante fisico EJECT */
+    .drive-footer-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 24px;
+    }
+
+    .led-indicator-group {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .drive-led {
+      width: 12px;
+      height: 7px;
+      border-radius: 2px;
+      background: #10b981;
+      border: 1px solid #334155;
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.8);
+      transition: background 0.12s ease, box-shadow 0.12s ease;
+    }
+
+    .drive-led.blinking {
+      background: #f59e0b;
+      box-shadow: 0 0 12px rgba(245, 158, 11, 0.95);
+      animation: ledPulse 0.14s infinite alternate;
+    }
+
+    @keyframes ledPulse {
+      from { opacity: 0.3; }
+      to { opacity: 1; }
+    }
+
+    .led-text {
+      font-size: 9px;
+      font-weight: 800;
+      color: #334155;
+      letter-spacing: 0.06em;
+    }
+
+    .eject-btn {
+      height: 22px;
+      padding: 0 11px;
+      border-radius: 4px;
+      border: 1.5px solid #475569;
+      background: linear-gradient(180deg, #f8fafc 0%, #cbd5e1 100%);
+      color: #0f172a;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: 0 2px 0 #475569, 0 3px 6px rgba(0, 0, 0, 0.25);
+      transition: transform 0.08s ease, box-shadow 0.08s ease, opacity 0.2s ease;
+    }
+
+    .eject-btn:active:not(:disabled) {
+      transform: translateY(2px);
+      box-shadow: 0 0 0 #475569;
+    }
+
+    .eject-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    /* ==========================================================================
+       4. BOTTOM FLOPPY RACK / LIBRERIA DISCHETTI
+       ========================================================================== */
+    .shelf-section {
+      position: relative;
+      z-index: 25;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+    }
+
+    .shelf-hint {
+      font-size: 11px;
+      color: #94a3b8;
+      margin: 0 0 10px;
+      letter-spacing: 0.04em;
+      text-align: center;
+      padding: 0 12px;
+    }
+
+    .floppy-rack {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      gap: clamp(10px, 2vw, 24px);
+      justify-content: center;
+      align-items: flex-end;
+      padding: 0 20px 20px;
+      position: relative;
+    }
+
+    /* Mensola angolata sotto i dischetti */
+    .floppy-rack::after {
+      content: "";
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(94vw, 940px);
+      height: 16px;
+      background: linear-gradient(180deg, #334155 0%, #1e293b 65%, #0f172a 100%);
+      border-top: 1px solid rgba(148, 163, 184, 0.35);
+      border-radius: 6px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.75);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Slot individuale nella libreria */
+    .floppy-slot {
+      position: relative;
+      z-index: 5;
+      width: clamp(58px, 15.5vw, 170px);
+      height: clamp(140px, 21vh, 180px);
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    /* Alloggiamento vuoto etichettato visibile quando il floppy è nel lettore */
+    .empty-slot-placeholder {
+      position: absolute;
+      inset: 6px 2px 0;
+      border: 1.5px dashed rgba(148, 163, 184, 0.28);
+      border-radius: 8px;
+      background: rgba(15, 23, 42, 0.55);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .empty-slot-code {
+      font-size: 9px;
+      font-weight: 700;
+      color: #64748b;
+      word-break: break-all;
+    }
+
+    .empty-slot-status {
+      font-size: 8px;
+      color: #38bdf8;
+      margin-top: 4px;
+      text-transform: uppercase;
+    }
+
+    /* Contenitore interattivo del singolo Floppy Disk */
+    .floppy-item {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+      outline: none;
+      z-index: 10;
+    }
+
+    .floppy-item.is-inserted {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Corpo fisico del Floppy Disk 3.5" */
+    .floppy-body {
+      width: 100%;
+      height: 100%;
+      border-radius: 7px 14px 6px 6px; /* Angolo smussato in alto a destra */
+      border: 1.5px solid rgba(255, 255, 255, 0.22);
+      padding: 0 clamp(5px, 1vw, 10px) 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      box-shadow:
+        0 10px 22px rgba(2, 6, 23, 0.65),
+        inset 0 1px 1px rgba(255, 255, 255, 0.45),
+        inset 0 -3px 6px rgba(0, 0, 0, 0.38);
+      transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.2s ease, box-shadow 0.25s ease;
+    }
+
+    /* Effetto Hover richiesto: sollevamento, rotazione leggera e bordo evidenziato */
+    .floppy-item:hover .floppy-body,
+    .floppy-item:focus-visible .floppy-body {
+      transform: translateY(-16px) rotate(-1.5deg);
+      border-color: #38bdf8;
+      box-shadow:
+        0 20px 32px rgba(2, 6, 23, 0.8),
+        0 0 0 2px rgba(56, 189, 248, 0.35),
+        inset 0 1px 1px rgba(255, 255, 255, 0.6);
+    }
+
+    /* Otturatore metallico scorrevole in alto */
+    .floppy-shutter {
+      width: 64%;
+      height: clamp(32px, 5.2vh, 44px);
+      margin: 0 auto;
+      background: linear-gradient(120deg, #94a3b8 0%, #f1f5f9 38%, #cbd5e1 68%, #64748b 100%);
+      border: 1px solid #475569;
+      border-top: none;
+      border-radius: 0 0 4px 4px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 16%;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
+    }
+
+    .floppy-shutter-cutout {
+      width: 24%;
+      height: 68%;
+      background: #0f172a;
+      border-radius: 2px;
+    }
+
+    /* Tacca protezione scrittura e freccia inserimento */
+    .floppy-arrow {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      font-size: 8px;
+      color: rgba(255, 255, 255, 0.65);
+      line-height: 1;
+    }
+
+    .floppy-notch {
+      position: absolute;
+      bottom: 8px;
+      right: 4px;
+      width: 4px;
+      height: 6px;
+      background: rgba(15, 23, 42, 0.65);
+      border-radius: 1px;
+    }
+
+    /* Etichetta cartacea bianca del dischetto */
+    .floppy-label {
+      width: 100%;
+      height: 60%;
+      background: #f8fafc;
+      border-radius: 4px;
+      border: 1px solid rgba(15, 23, 42, 0.18);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+    }
+
+    .floppy-label-stripe {
+      width: 100%;
+      height: 6px;
+      flex-shrink: 0;
+    }
+
+    .floppy-label-content {
+      flex: 1;
+      padding: 5px 6px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      background-image: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 12px,
+        rgba(148, 163, 184, 0.22) 13px
+      );
+    }
+
+    /* SOLO filename monospace + sottotitolo di 2 parole con overflow: hidden */
+    .floppy-filename {
+      color: #0f172a;
+      font-size: clamp(9px, 1.05vw, 12px);
+      font-weight: 800;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .floppy-subtitle {
+      color: #475569;
+      font-size: clamp(9px, 0.95vw, 11px);
+      font-weight: 600;
+      line-height: 1.2;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ==========================================================================
+       5. TOOLTIP ANTEPRIMA SU HOVER (REGOLE ESATTE DI POSIZIONAMENTO)
+       ========================================================================== */
+    .preview-tooltip {
+      position: absolute;
+      bottom: calc(100% + 14px);
+      width: 220px;
+      background: #1e293b;
+      border: 1px solid #38bdf8;
+      border-radius: 8px;
+      padding: 10px 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: all 0.2s ease;
+      z-index: 50;
+      font-size: 12px;
+      line-height: 1.4;
+      color: #e2e8f0;
+      text-align: left;
+    }
+
+    .floppy-item:hover .preview-tooltip,
+    .floppy-item:focus-visible .preview-tooltip {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(-4px);
+    }
+
+    /* Allineamento orizzontale sicuro per non tagliare mai i tooltip ai bordi */
+    .floppy-slot:first-child .preview-tooltip {
+      left: 0;
+    }
+
+    .floppy-slot:last-child .preview-tooltip {
+      right: 0;
+    }
+
+    .floppy-slot:not(:first-child):not(:last-child) .preview-tooltip {
+      left: 50%;
+      margin-left: -110px;
+    }
+
+    .tooltip-header {
+      font-size: 10px;
+      font-weight: 700;
+      color: #38bdf8;
+      margin-bottom: 4px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .tooltip-action {
+      margin-top: 6px;
+      font-size: 10px;
+      font-weight: 700;
+      color: #34d399;
+    }
+
+    /* Clone volante usato esclusivamente durante l'animazione di inserimento/espulsione */
+    .flying-floppy-proxy {
+      position: fixed;
+      z-index: 90;
+      pointer-events: none;
+      margin: 0;
+    }
+
+    /* ==========================================================================
+       6. FINESTRA POP-UP OS (SEMPRE NASCOSTA ALL'AVVIO: display: none)
+       ========================================================================== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(2, 6, 23, 0.75);
+      backdrop-filter: blur(4px);
+      padding: 16px;
+    }
+
+    .modal-overlay.is-open {
+      display: flex;
+    }
+
+    .os-window {
+      width: min(760px, 92vw);
+      max-height: 80vh;
+      background: #0f172a;
+      border: 1.5px solid #38bdf8;
+      border-radius: 10px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(56, 189, 248, 0.2);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: width 0.2s ease, height 0.2s ease, max-height 0.2s ease;
+    }
+
+    .os-window.is-maximized {
+      width: 96vw;
+      height: 88vh;
+      max-height: 88vh;
+    }
+
+    /* Barra del titolo della finestra con i 3 bottoni */
+    .window-titlebar {
+      height: 38px;
+      padding: 0 12px;
+      background: linear-gradient(90deg, #1e293b 0%, #0f172a 100%);
+      border-bottom: 1px solid rgba(56, 189, 248, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .window-title-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .window-disk-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    .window-title-text {
+      font-size: 12px;
+      font-weight: 700;
+      color: #f8fafc;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .window-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .win-btn {
+      width: 26px;
+      height: 22px;
+      border-radius: 4px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: #1e293b;
+      color: #e2e8f0;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .win-btn:hover {
+      background: #334155;
+      border-color: #38bdf8;
+      color: #ffffff;
+    }
+
+    .win-btn.close-btn:hover {
+      background: #ef4444;
+      border-color: #f87171;
+      color: #ffffff;
+    }
+
+    /* Sotto-barra info volume */
+    .window-subbar {
+      padding: 5px 14px;
+      background: #162033;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11px;
+      color: #94a3b8;
+      flex-shrink: 0;
+    }
+
+    /* Corpo interno scorribile della finestra */
+    .modal-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      color: #e2e8f0;
+      line-height: 1.55;
+      user-select: text;
+    }
+
+    .modal-body::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .modal-body::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+
+    .modal-body::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 4px;
+    }
+
+    /* Footer finestra */
+    .window-footer {
+      padding: 8px 14px;
+      background: #162033;
+      border-top: 1px solid rgba(148, 163, 184, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .window-footer-note {
+      font-size: 11px;
+      color: #94a3b8;
+    }
+
+    .window-eject-action {
+      padding: 5px 12px;
+      border-radius: 5px;
+      border: 1px solid #38bdf8;
+      background: rgba(14, 165, 233, 0.16);
+      color: #7dd3fc;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.15s ease, color 0.15s ease;
+    }
+
+    .window-eject-action:hover {
+      background: #0284c7;
+      color: #ffffff;
+    }
+
+    /* ==========================================================================
+       7. STILI INTERNI AI CONTENUTI DEL CV NELLA FINESTRA MODALE
+       ========================================================================== */
+    .cv-section-header {
+      border-bottom: 1px solid rgba(148, 163, 184, 0.22);
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
+
+    .cv-tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      padding: 3px 8px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .cv-h2 {
+      margin: 0;
+      font-size: 20px;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+
+    .cv-lead {
+      margin: 4px 0 0;
+      font-size: 13px;
+      color: #38bdf8;
+      font-weight: 600;
+    }
+
+    .cv-bio {
+      font-size: 14px;
+      color: #cbd5e1;
+      margin: 0 0 18px;
+    }
+
+    .cv-group-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: #94a3b8;
+      margin: 16px 0 10px;
+    }
+
+    .cv-card {
+      background: rgba(30, 41, 59, 0.72);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+    }
+
+    .cv-card-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .cv-card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+
+    .cv-badge {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      background: rgba(56, 189, 248, 0.14);
+      color: #7dd3fc;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+
+    .cv-card-sub {
+      font-size: 12px;
+      font-weight: 600;
+      color: #94a3b8;
+      margin-bottom: 6px;
+    }
+
+    .cv-card-desc {
+      font-size: 13px;
+      color: #cbd5e1;
+      margin: 0;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 12px;
+    }
+
+    .pill-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 8px;
+    }
+
+    .skill-pill {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: #0f172a;
+      border: 1px solid rgba(139, 92, 246, 0.45);
+      color: #e9d5ff;
+    }
+
+    .scholar-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+      padding: 9px 14px;
+      border-radius: 7px;
+      background: #10b981;
+      color: #022c22;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background 0.15s ease;
+    }
+
+    .scholar-btn:hover {
+      background: #34d399;
+    }
+
+    .contacts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 10px;
+    }
+
+    .contact-card {
+      background: rgba(30, 41, 59, 0.78);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 8px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .contact-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #fda4af;
+    }
+
+    .contact-value {
+      font-size: 13px;
+      font-weight: 600;
+      color: #f8fafc;
+      text-decoration: none;
+      word-break: break-all;
+    }
+
+    .contact-value:hover {
+      color: #38bdf8;
+      text-decoration: underline;
+    }
+
+    .copy-btn {
+      align-self: flex-start;
+      padding: 4px 10px;
+      border-radius: 5px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: #0f172a;
+      color: #cbd5e1;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .copy-btn:hover {
+      border-color: #38bdf8;
+      color: #ffffff;
+    }
+
+    .copy-btn.copied {
+      background: #065f46;
+      border-color: #10b981;
+      color: #ecfdf5;
+    }
+
+    /* Toast notifica copia negli appunti */
+    .toast-banner {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1200;
+      background: #065f46;
+      border: 1px solid #34d399;
+      color: #ecfdf5;
+      padding: 8px 14px;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .toast-banner.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
 </head>
 <body>
-    <div class="box">
-        <h1>Il sito è online! 🚀</h1>
-        <p>Se leggi questo messaggio, HTML, CSS e JavaScript funzionano correttamente.</p>
-        <p id="timestamp"></p>
+
+  <!-- 1. TOP STATUS BAR -->
+  <header class="top-bar">
+    <div class="top-bar-left">
+      <span class="status-dot" aria-hidden="true"></span>
+      <span class="os-brand mono">MarcoOS v2.6 // MDG-WORKSTATION</span>
     </div>
 
-    <script>
-        document.getElementById('timestamp').textContent = 
-            'Pagina caricata il: ' + new Date().toLocaleString('it-IT');
-    </script>
+    <div class="top-bar-right">
+      <button type="button" id="restore-window-btn" class="top-pill-btn restore-tab mono" title="Ripristina finestra ridotta a icona">
+        <span>[🖴]</span>
+        <span id="restore-window-label">01_PROFILO.SYS</span>
+      </button>
+
+      <button type="button" id="sfx-toggle-btn" class="top-pill-btn mono" aria-label="Attiva o disattiva effetti sonori">
+        <span id="sfx-label">SFX: ON</span>
+      </button>
+
+      <span id="live-clock" class="clock-display mono">--:--:--</span>
+    </div>
+  </header>
+
+  <!-- 2. CENTER-UPPER STAGE: LETTORE FLOPPY DISK MDG-3500 -->
+  <section class="drive-stage" aria-label="Lettore Floppy Disk MDG-3500">
+    <div class="drive-unit">
+      <div class="drive-header">
+        <div class="drive-badge-group">
+          <span class="drive-model-badge mono">MDG-3500</span>
+          <span class="drive-sub-label mono">3.5&quot; HIGH DENSITY DRIVE</span>
+        </div>
+        <div class="drive-vents" aria-hidden="true">
+          <span class="drive-vent"></span>
+          <span class="drive-vent"></span>
+          <span class="drive-vent"></span>
+          <span class="drive-vent"></span>
+        </div>
+      </div>
+
+      <div class="drive-bezel">
+        <div class="drive-lcd" role="status" aria-live="polite">
+          <span id="drive-lcd-text" class="lcd-status-text mono">PRONTO - INSERISCI DISCHETTO</span>
+          <span class="lcd-capacity mono">1.44MB</span>
+        </div>
+
+        <div id="drive-slot" class="drive-slot">
+          <div id="inserted-disk-lip" class="inserted-disk-lip"></div>
+          <div class="drive-slot-notch" aria-hidden="true"></div>
+        </div>
+
+        <div class="drive-footer-controls">
+          <div class="led-indicator-group">
+            <span id="drive-led" class="drive-led"></span>
+            <span class="led-text mono">READ / BUSY</span>
+          </div>
+
+          <button type="button" id="drive-eject-btn" class="eject-btn mono" disabled>
+            <span>&#9167;</span>
+            <span>EJECT</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. BOTTOM FLOPPY RACK / LIBRERIA DISCHETTI -->
+  <section class="shelf-section" aria-label="Libreria Floppy Disk">
+    <p class="shelf-hint mono">Passa il cursore su un dischetto per l&apos;anteprima &bull; Clicca per inserirlo nel lettore</p>
+    <div id="floppy-rack" class="floppy-rack"></div>
+  </section>
+
+  <!-- 4. FINESTRA POP-UP OS (NASCOSTA DI DEFAULT TRAMITE display: none) -->
+  <div id="modal-overlay" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div id="os-window" class="os-window">
+      <div class="window-titlebar">
+        <div class="window-title-left">
+          <span id="window-disk-dot" class="window-disk-dot"></span>
+          <span id="modal-title" class="window-title-text mono">A:\01_PROFILO.SYS</span>
+        </div>
+
+        <div class="window-controls">
+          <button type="button" id="btn-minimize" class="win-btn mono" title="Riduci a icona" aria-label="Riduci a icona">_</button>
+          <button type="button" id="btn-maximize" class="win-btn mono" title="Ingrandisci / Ripristina" aria-label="Ingrandisci">&#9633;</button>
+          <button type="button" id="btn-close" class="win-btn close-btn mono" title="Chiudi ed espelli dischetto" aria-label="Chiudi">&times;</button>
+        </div>
+      </div>
+
+      <div class="window-subbar mono">
+        <span id="window-path">UNIT&Agrave; A: // LETTURA COMPLETATA</span>
+        <span>MARCO DE GREGORIO CV</span>
+      </div>
+
+      <div id="modal-body" class="modal-body"></div>
+
+      <div class="window-footer">
+        <span id="window-footer-info" class="window-footer-note mono">Volume montato in A:\</span>
+        <button type="button" id="footer-eject-btn" class="window-eject-action mono">
+          <span>&#9167;</span>
+          <span>Espelli Dischetto</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST COPIA NEGLI APPUNTI -->
+  <div id="toast-banner" class="toast-banner mono" role="status" aria-live="polite">Copiato negli appunti!</div>
+
+  <script>
+    /* ==========================================================================
+       DATI STRUTTURATI DEI 5 FLOPPY DISK (SOLO OGGETTI JS PULITI, NESSUN BACKTICK)
+       ========================================================================== */
+    var FLOPPY_DISKS = [
+      {
+        id: 'profilo',
+        filename: '01_PROFILO.SYS',
+        subtitle: 'Bio & Formazione',
+        color: '#0ea5e9',
+        darkColor: '#0369a1',
+        preview: 'PhD Student & Control Systems Engineer. Doppia laurea 110/110 cum Laude @ UNISA.',
+        sectionType: 'profilo',
+        bio: 'Software Engineer & PhD Student specializzato in Control Systems, embedded systems, state estimation e MIL/SIL testing. Orientato a unire ricerca avanzata e ingegneria pratica in contesti R&D innovativi.',
+        education: [
+          {
+            degree: 'M.Sc. Computer Engineering (Automation & Control Systems)',
+            school: 'University of Salerno (2022–2023)',
+            grade: '110/110 cum Laude'
+          },
+          {
+            degree: 'B.Sc. Computer Engineering',
+            school: 'University of Salerno (2018–2021)',
+            grade: '110/110 cum Laude'
+          },
+          {
+            degree: 'High School Diploma (Applied Sciences)',
+            school: 'Liceo De Liguori (2018)',
+            grade: 'Diploma'
+          }
+        ],
+        languages: ['Italiano (Madrelingua)', 'Inglese (B2)']
+      },
+      {
+        id: 'esperienze',
+        filename: '02_ESPERIENZE.EXE',
+        subtitle: 'Carriera & Ricerca',
+        color: '#f97316',
+        darkColor: '#c2410c',
+        preview: 'Jozef Stefan Institute, PhD UNISA, Dumarey Automotive (General Motors)...',
+        sectionType: 'esperienze',
+        items: [
+          {
+            role: 'Guest Researcher',
+            org: 'Jozef Stefan Institute, Ljubljana, Slovenia',
+            period: 'Lug 2026 – Presente',
+            desc: 'Focus su Electrochemical Impedance Spectroscopy (EIS), sistemi embedded, DRBS, PRBS e tecniche di ottimizzazione.'
+          },
+          {
+            role: 'PhD Researcher',
+            org: 'University of Salerno, Fisciano, Italia',
+            period: 'Nov 2024 – Presente',
+            desc: 'Ricerca su state estimation, Battery Management Systems (BMS) e algoritmi EIS.'
+          },
+          {
+            role: 'Expert Student Evaluator',
+            org: 'QUACING, Italia',
+            period: 'Nov 2022 – Presente',
+            desc: 'Membro delle commissioni di valutazione QUACING (agenzia affiliata ENQA) per l\'accreditamento EUR-ACE dei corsi di laurea in ingegneria.'
+          },
+          {
+            role: 'Control System Engineer for General Motors',
+            org: 'Dumarey Automotive Italia, Torino, Italia (Brain Technologies)',
+            period: 'Set 2023 – Ott 2024',
+            desc: 'Sistemi di controllo automotive, definizione requisiti, testing MIL e SIL.'
+          },
+          {
+            role: 'Research Fellow',
+            org: 'University of Salerno, Fisciano, Italia',
+            period: 'Apr 2022 – Ott 2022',
+            desc: 'Sviluppo di un sistema per raccolta, catalogazione e analisi dati da sensori piezoresistivi innovativi.'
+          },
+          {
+            role: 'Student Internship',
+            org: 'University of Salerno, Salerno, Italia',
+            period: 'Giu 2021 – Ago 2021',
+            desc: 'Progettazione e implementazione di una smart chair per il monitoraggio della postura corretta.'
+          },
+          {
+            role: 'Internship',
+            org: 'microsistemi, Piano di Sorrento, Italia',
+            period: 'Lug 2015 – Ago 2015',
+            desc: 'Esperienza come tecnico server e computer.'
+          }
+        ]
+      },
+      {
+        id: 'skills',
+        filename: '03_SKILLS.BIN',
+        subtitle: 'Stack Tecnico',
+        color: '#8b5cf6',
+        darkColor: '#6d28d9',
+        preview: 'MATLAB, Simulink, Kalman Filter, EIS, Python, C/C++, VHDL, Embedded.',
+        sectionType: 'skills',
+        categories: [
+          {
+            name: 'Control Systems',
+            pills: ['MATLAB', 'Simulink', 'MIL/SIL/HIL/PIL', 'Kalman Filter', 'EIS (Electrochemical Impedance Spectroscopy)']
+          },
+          {
+            name: 'Programming',
+            pills: ['Python', 'C', 'C++', 'Java', 'Bash', 'VHDL']
+          },
+          {
+            name: 'Embedded & IoT',
+            pills: ['Embedded Systems', 'Sensors', 'Signal Processing', 'Requirements']
+          },
+          {
+            name: 'Languages',
+            pills: ['Italian (Native)', 'English (B2)']
+          }
+        ]
+      },
+      {
+        id: 'ricerca',
+        filename: '04_RICERCA.DOC',
+        subtitle: 'Pubblicazioni',
+        color: '#10b981',
+        darkColor: '#047857',
+        preview: 'Articoli scientifici su IEEE (2026) e Sensors MDPI (2023).',
+        sectionType: 'ricerca',
+        publications: [
+          {
+            year: '2026',
+            venue: 'IEEE',
+            title: 'Enhanced Linear Kramers-Kronig Validation Method for Battery EIS Data',
+            desc: 'Sviluppo di un framework avanzato di validazione per l\'elaborazione dati EIS (Electrochemical Impedance Spectroscopy) delle batterie.'
+          },
+          {
+            year: '2023',
+            venue: 'Sensors (MDPI)',
+            title: 'IoT System for Real-Time Posture Asymmetry Detection',
+            desc: 'Progettazione di un sistema di misura basato su IoT per il rilevamento e l\'analisi in tempo reale dell\'asimmetria posturale.'
+          }
+        ],
+        scholarUrl: 'https://scholar.google.com/scholar?q=Marco+De+Gregorio'
+      },
+      {
+        id: 'contatti',
+        filename: '05_CONTATTI.NET',
+        subtitle: 'Contatti & Link',
+        color: '#f43f5e',
+        darkColor: '#be123c',
+        preview: 'Email, Telefono, GitHub (github.com/mdg217) e Google Scholar.',
+        sectionType: 'contatti',
+        contacts: [
+          {
+            label: 'Email Personale',
+            value: 'marcodegregorio17@gmail.com',
+            href: 'mailto:marcodegregorio17@gmail.com',
+            copyValue: 'marcodegregorio17@gmail.com'
+          },
+          {
+            label: 'Email Accademica',
+            value: 'mdegregorio@unisa.it',
+            href: 'mailto:mdegregorio@unisa.it',
+            copyValue: 'mdegregorio@unisa.it'
+          },
+          {
+            label: 'Telefono',
+            value: '+39 351 870 7898',
+            href: 'tel:+393518707898',
+            copyValue: '+39 351 870 7898'
+          },
+          {
+            label: 'Posizione',
+            value: 'Italia / Ljubljana, Slovenia',
+            href: '',
+            copyValue: 'Italia / Ljubljana, Slovenia'
+          },
+          {
+            label: 'GitHub',
+            value: 'github.com/mdg217',
+            href: 'https://github.com/mdg217',
+            copyValue: 'https://github.com/mdg217'
+          },
+          {
+            label: 'Google Scholar',
+            value: 'Profilo Google Scholar (Marco De Gregorio)',
+            href: 'https://scholar.google.com/scholar?q=Marco+De+Gregorio',
+            copyValue: 'https://scholar.google.com/scholar?q=Marco+De+Gregorio'
+          }
+        ]
+      }
+    ];
+
+    /* ==========================================================================
+       EFFETTI SONORI MECCANICI FLOPPY (WEB AUDIO API)
+       ========================================================================== */
+    var sfxEnabled = true;
+    var audioCtx = null;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        var Ctx = window.AudioContext || window.webkitAudioContext;
+        if (Ctx) {
+          audioCtx = new Ctx();
+        }
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    function playClickSound() {
+      if (!sfxEnabled) return;
+      try {
+        var ctx = getAudioContext();
+        if (!ctx) return;
+        var now = ctx.currentTime;
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(520, now);
+        osc.frequency.exponentialRampToValueAtTime(180, now + 0.03);
+        gain.gain.setValueAtTime(0.05, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.035);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.04);
+      } catch (e) {}
+    }
+
+    function playInsertWhirSound() {
+      if (!sfxEnabled) return;
+      try {
+        var ctx = getAudioContext();
+        if (!ctx) return;
+        var now = ctx.currentTime;
+
+        var clack = ctx.createOscillator();
+        var clackGain = ctx.createGain();
+        clack.type = 'square';
+        clack.frequency.setValueAtTime(210, now);
+        clack.frequency.exponentialRampToValueAtTime(75, now + 0.08);
+        clackGain.gain.setValueAtTime(0.1, now);
+        clackGain.gain.exponentialRampToValueAtTime(0.001, now + 0.085);
+        clack.connect(clackGain);
+        clackGain.connect(ctx.destination);
+        clack.start(now);
+        clack.stop(now + 0.09);
+
+        var pulses = [0.22, 0.32, 0.42, 0.52];
+        for (var i = 0; i < pulses.length; i++) {
+          var t = now + pulses[i];
+          var step = ctx.createOscillator();
+          var stepGain = ctx.createGain();
+          step.type = 'sawtooth';
+          step.frequency.setValueAtTime(145 + i * 20, t);
+          stepGain.gain.setValueAtTime(0.04, t);
+          stepGain.gain.exponentialRampToValueAtTime(0.001, t + 0.055);
+          step.connect(stepGain);
+          stepGain.connect(ctx.destination);
+          step.start(t);
+          step.stop(t + 0.06);
+        }
+      } catch (e) {}
+    }
+
+    function playEjectSpringSound() {
+      if (!sfxEnabled) return;
+      try {
+        var ctx = getAudioContext();
+        if (!ctx) return;
+        var now = ctx.currentTime;
+        var osc = ctx.createOscillator();
+        var gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(150, now);
+        osc.frequency.exponentialRampToValueAtTime(430, now + 0.09);
+        gain.gain.setValueAtTime(0.09, now);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.11);
+      } catch (e) {}
+    }
+
+    /* ==========================================================================
+       LOGICA APPLICATIVA PRINCIPALE
+       ========================================================================== */
+    document.addEventListener('DOMContentLoaded', function () {
+      var rackEl = document.getElementById('floppy-rack');
+      var driveSlotEl = document.getElementById('drive-slot');
+      var insertedLipEl = document.getElementById('inserted-disk-lip');
+      var driveLcdEl = document.getElementById('drive-lcd-text');
+      var driveLedEl = document.getElementById('drive-led');
+      var driveEjectBtn = document.getElementById('drive-eject-btn');
+
+      var modalOverlay = document.getElementById('modal-overlay');
+      var osWindow = document.getElementById('os-window');
+      var windowDiskDot = document.getElementById('window-disk-dot');
+      var modalTitle = document.getElementById('modal-title');
+      var windowPath = document.getElementById('window-path');
+      var modalBody = document.getElementById('modal-body');
+      var windowFooterInfo = document.getElementById('window-footer-info');
+
+      var btnMinimize = document.getElementById('btn-minimize');
+      var btnMaximize = document.getElementById('btn-maximize');
+      var btnClose = document.getElementById('btn-close');
+      var footerEjectBtn = document.getElementById('footer-eject-btn');
+
+      var restoreWindowBtn = document.getElementById('restore-window-btn');
+      var restoreWindowLabel = document.getElementById('restore-window-label');
+      var sfxToggleBtn = document.getElementById('sfx-toggle-btn');
+      var sfxLabel = document.getElementById('sfx-label');
+      var liveClock = document.getElementById('live-clock');
+      var toastBanner = document.getElementById('toast-banner');
+
+      var activeDisk = null;
+      var isAnimating = false;
+      var isMinimized = false;
+      var toastTimer = null;
+
+      /* Orologio digitale live nella top bar */
+      function updateClock() {
+        var now = new Date();
+        liveClock.textContent = now.toLocaleTimeString('it-IT');
+      }
+      updateClock();
+      setInterval(updateClock, 1000);
+
+      /* Toast notifica copia */
+      function showToast(message) {
+        toastBanner.textContent = message;
+        toastBanner.classList.add('show');
+        if (toastTimer) clearTimeout(toastTimer);
+        toastTimer = setTimeout(function () {
+          toastBanner.classList.remove('show');
+        }, 1800);
+      }
+
+      /* Copia testo negli appunti (compatibile anche con iframe) */
+      function copyTextToClipboard(text, btnEl) {
+        try {
+          var temp = document.createElement('textarea');
+          temp.value = text;
+          temp.style.position = 'fixed';
+          temp.style.opacity = '0';
+          document.body.appendChild(temp);
+          temp.select();
+          document.execCommand('copy');
+          document.body.removeChild(temp);
+
+          playClickSound();
+          showToast('Copiato: ' + text);
+          if (btnEl) {
+            var oldText = btnEl.textContent;
+            btnEl.textContent = 'Copiato!';
+            btnEl.classList.add('copied');
+            setTimeout(function () {
+              btnEl.textContent = oldText;
+              btnEl.classList.remove('copied');
+            }, 1600);
+          }
+        } catch (err) {}
+      }
+
+      /* Helper creazione elementi DOM puliti */
+      function el(tag, className, textContent) {
+        var node = document.createElement(tag);
+        if (className) node.className = className;
+        if (typeof textContent === 'string') node.textContent = textContent;
+        return node;
+      }
+
+      /* Costruisce il corpo fisico di un Floppy Disk tramite DOM puro */
+      function buildFloppyBodyElement(disk) {
+        var body = el('div', 'floppy-body');
+        body.style.background = 'linear-gradient(155deg, ' + disk.color + ' 0%, ' + disk.darkColor + ' 100%)';
+
+        var arrow = el('span', 'floppy-arrow', '▲');
+        var notch = el('span', 'floppy-notch');
+
+        var shutter = el('div', 'floppy-shutter');
+        var cutout = el('div', 'floppy-shutter-cutout');
+        shutter.appendChild(cutout);
+
+        var label = el('div', 'floppy-label');
+        var stripe = el('div', 'floppy-label-stripe');
+        stripe.style.backgroundColor = disk.color;
+
+        var labelContent = el('div', 'floppy-label-content');
+        var fileEl = el('div', 'floppy-filename mono', disk.filename);
+        var subEl = el('div', 'floppy-subtitle', disk.subtitle);
+
+        labelContent.appendChild(fileEl);
+        labelContent.appendChild(subEl);
+        label.appendChild(stripe);
+        label.appendChild(labelContent);
+
+        body.appendChild(arrow);
+        body.appendChild(notch);
+        body.appendChild(shutter);
+        body.appendChild(label);
+
+        return body;
+      }
+
+      /* Popola la libreria inferiore con i 5 dischetti */
+      function renderFloppyShelf() {
+        rackEl.innerHTML = '';
+
+        FLOPPY_DISKS.forEach(function (disk) {
+          var slot = el('div', 'floppy-slot');
+          slot.setAttribute('data-disk-id', disk.id);
+
+          /* Alloggiamento vuoto etichettato (visibile quando il disco è inserito nel lettore) */
+          var placeholder = el('div', 'empty-slot-placeholder');
+          var phCode = el('span', 'empty-slot-code mono', disk.filename);
+          var phStatus = el('span', 'empty-slot-status mono', 'IN DRIVE A:');
+          placeholder.appendChild(phCode);
+          placeholder.appendChild(phStatus);
+
+          /* Elemento interattivo Floppy */
+          var item = el('div', 'floppy-item');
+          item.setAttribute('tabindex', '0');
+          item.setAttribute('role', 'button');
+          item.setAttribute('aria-label', 'Inserisci dischetto ' + disk.filename + ' - ' + disk.subtitle);
+
+          /* Tooltip anteprima su hover */
+          var tooltip = el('div', 'preview-tooltip');
+          var tipHeader = el('div', 'tooltip-header mono');
+          var tipFile = el('span', '', 'A:\\' + disk.filename);
+          var tipSub = el('span', '', disk.subtitle);
+          tipHeader.appendChild(tipFile);
+          tipHeader.appendChild(tipSub);
+
+          var tipText = el('div', '', disk.preview);
+          var tipAction = el('div', 'tooltip-action mono', 'Clicca per inserire nel lettore →');
+
+          tooltip.appendChild(tipHeader);
+          tooltip.appendChild(tipText);
+          tooltip.appendChild(tipAction);
+
+          var floppyBody = buildFloppyBodyElement(disk);
+
+          item.appendChild(tooltip);
+          item.appendChild(floppyBody);
+
+          /* Eventi Hover */
+          item.addEventListener('mouseenter', function () {
+            if (!isAnimating && (!activeDisk || activeDisk.id !== disk.id)) {
+              playClickSound();
+              if (!activeDisk) {
+                driveLcdEl.textContent = 'ANTEPRIMA: ' + disk.filename;
+              }
+            }
+          });
+
+          item.addEventListener('mouseleave', function () {
+            if (!isAnimating && !activeDisk) {
+              driveLcdEl.textContent = 'PRONTO - INSERISCI DISCHETTO';
+            }
+          });
+
+          /* Evento Click / Tastiera */
+          item.addEventListener('click', function () {
+            insertFloppyDisk(disk, slot);
+          });
+
+          item.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              insertFloppyDisk(disk, slot);
+            }
+          });
+
+          slot.appendChild(placeholder);
+          slot.appendChild(item);
+          rackEl.appendChild(slot);
+        });
+      }
+
+      /* Costruisce il contenuto DOM della finestra modale per il disco selezionato */
+      function populateModalContent(disk) {
+        modalBody.innerHTML = '';
+
+        /* Intestazione comune della sezione */
+        var header = el('div', 'cv-section-header');
+        var tag = el('span', 'cv-tag mono', 'VOLUME A:\\' + disk.filename);
+        tag.style.backgroundColor = disk.color + '26';
+        tag.style.color = disk.color;
+        tag.style.border = '1px solid ' + disk.color + '66';
+
+        var h2 = el('h2', 'cv-h2', 'Marco De Gregorio — ' + disk.subtitle);
+        var lead = el('p', 'cv-lead mono', 'Software Engineer & PhD Student • Control Systems & Embedded');
+
+        header.appendChild(tag);
+        header.appendChild(h2);
+        header.appendChild(lead);
+        modalBody.appendChild(header);
+
+        if (disk.sectionType === 'profilo') {
+          var bioP = el('p', 'cv-bio', disk.bio);
+          modalBody.appendChild(bioP);
+
+          modalBody.appendChild(el('h3', 'cv-group-title mono', 'Formazione Accademica (Education)'));
+          disk.education.forEach(function (edu) {
+            var card = el('div', 'cv-card');
+            var top = el('div', 'cv-card-top');
+            top.appendChild(el('span', 'cv-card-title', edu.degree));
+            top.appendChild(el('span', 'cv-badge mono', edu.grade));
+            card.appendChild(top);
+            card.appendChild(el('div', 'cv-card-sub', edu.school));
+            modalBody.appendChild(card);
+          });
+
+          modalBody.appendChild(el('h3', 'cv-group-title mono', 'Lingue'));
+          var langWrap = el('div', 'pill-list');
+          disk.languages.forEach(function (lang) {
+            var pill = el('span', 'skill-pill mono', lang);
+            pill.style.borderColor = disk.color;
+            pill.style.color = '#e0f2fe';
+            langWrap.appendChild(pill);
+          });
+          modalBody.appendChild(langWrap);
+        }
+
+        if (disk.sectionType === 'esperienze') {
+          disk.items.forEach(function (exp) {
+            var card = el('div', 'cv-card');
+            var top = el('div', 'cv-card-top');
+            top.appendChild(el('span', 'cv-card-title', exp.role));
+            var badge = el('span', 'cv-badge mono', exp.period);
+            badge.style.color = '#fdba74';
+            badge.style.borderColor = 'rgba(249, 115, 22, 0.45)';
+            badge.style.backgroundColor = 'rgba(249, 115, 22, 0.14)';
+            top.appendChild(badge);
+
+            card.appendChild(top);
+            card.appendChild(el('div', 'cv-card-sub', exp.org));
+            card.appendChild(el('p', 'cv-card-desc', exp.desc));
+            modalBody.appendChild(card);
+          });
+        }
+
+        if (disk.sectionType === 'skills') {
+          var grid = el('div', 'skills-grid');
+          disk.categories.forEach(function (cat) {
+            var card = el('div', 'cv-card');
+            card.appendChild(el('div', 'cv-card-title mono', cat.name));
+            var pillList = el('div', 'pill-list');
+            cat.pills.forEach(function (p) {
+              pillList.appendChild(el('span', 'skill-pill mono', p));
+            });
+            card.appendChild(pillList);
+            grid.appendChild(card);
+          });
+          modalBody.appendChild(grid);
+        }
+
+        if (disk.sectionType === 'ricerca') {
+          disk.publications.forEach(function (pub) {
+            var card = el('div', 'cv-card');
+            var top = el('div', 'cv-card-top');
+            var venueBadge = el('span', 'cv-badge mono', pub.venue + ' • ' + pub.year);
+            venueBadge.style.color = '#6ee7b7';
+            venueBadge.style.borderColor = 'rgba(16, 185, 129, 0.45)';
+            venueBadge.style.backgroundColor = 'rgba(16, 185, 129, 0.14)';
+            top.appendChild(venueBadge);
+
+            card.appendChild(top);
+            var titleEl = el('div', 'cv-card-title', pub.title);
+            titleEl.style.margin = '6px 0';
+            card.appendChild(titleEl);
+            card.appendChild(el('p', 'cv-card-desc', pub.desc));
+            modalBody.appendChild(card);
+          });
+
+          var scholarLink = el('a', 'scholar-btn mono', 'Apri Google Scholar ↗');
+          scholarLink.href = disk.scholarUrl;
+          scholarLink.target = '_blank';
+          scholarLink.rel = 'noopener noreferrer';
+          modalBody.appendChild(scholarLink);
+        }
+
+        if (disk.sectionType === 'contatti') {
+          var cGrid = el('div', 'contacts-grid');
+          disk.contacts.forEach(function (c) {
+            var card = el('div', 'contact-card');
+            card.appendChild(el('span', 'contact-label mono', c.label));
+
+            if (c.href) {
+              var link = el('a', 'contact-value', c.value);
+              link.href = c.href;
+              if (c.href.indexOf('http') === 0) {
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+              }
+              card.appendChild(link);
+            } else {
+              card.appendChild(el('span', 'contact-value', c.value));
+            }
+
+            var copyBtn = el('button', 'copy-btn mono', 'Copia');
+            copyBtn.type = 'button';
+            copyBtn.addEventListener('click', function () {
+              copyTextToClipboard(c.copyValue, copyBtn);
+            });
+            card.appendChild(copyBtn);
+            cGrid.appendChild(card);
+          });
+          modalBody.appendChild(cGrid);
+        }
+      }
+
+      function delay(ms) {
+        return new Promise(function (resolve) {
+          setTimeout(resolve, ms);
+        });
+      }
+
+      /* Animazione inserimento dischetto nel lettore MDG-3500 */
+      async function insertFloppyDisk(disk, slotEl) {
+        if (isAnimating) return;
+
+        if (activeDisk) {
+          if (activeDisk.id === disk.id) {
+            if (isMinimized) {
+              restoreOSModal();
+            }
+            return;
+          }
+          await ejectFloppyDisk();
+        }
+
+        isAnimating = true;
+        activeDisk = disk;
+
+        var itemEl = slotEl.querySelector('.floppy-item');
+        var startRect = itemEl.getBoundingClientRect();
+        var slotRect = driveSlotEl.getBoundingClientRect();
+
+        /* Crea clone volante */
+        var proxy = buildFloppyBodyElement(disk);
+        proxy.className = 'floppy-body flying-floppy-proxy';
+        proxy.style.left = startRect.left + 'px';
+        proxy.style.top = startRect.top + 'px';
+        proxy.style.width = startRect.width + 'px';
+        proxy.style.height = startRect.height + 'px';
+        document.body.appendChild(proxy);
+
+        /* Nascondi il dischetto nello scaffale (lasciando lo slot etichettato) */
+        itemEl.classList.add('is-inserted');
+
+        driveLcdEl.textContent = 'LETTURA IN CORSO...';
+        driveLedEl.classList.add('blinking');
+        playInsertWhirSound();
+
+        var targetWidth = Math.min(slotRect.width * 0.68, 170);
+        var scaleRatio = targetWidth / startRect.width;
+        var targetHeight = startRect.height * scaleRatio;
+        var targetLeft = slotRect.left + (slotRect.width - targetWidth) / 2;
+        var targetTop = slotRect.top + 4;
+
+        proxy.getBoundingClientRect();
+        proxy.style.transition = 'all 0.36s cubic-bezier(0.22, 1, 0.36, 1)';
+        proxy.style.left = targetLeft + 'px';
+        proxy.style.top = targetTop + 'px';
+        proxy.style.width = targetWidth + 'px';
+        proxy.style.height = targetHeight + 'px';
+
+        await delay(360);
+
+        /* Fase finale ingresso dentro la fessura */
+        proxy.style.transition = 'transform 0.24s ease-in, opacity 0.24s ease-in';
+        proxy.style.transform = 'translateY(-18px) scaleY(0.15)';
+        proxy.style.opacity = '0';
+
+        insertedLipEl.style.background = 'linear-gradient(90deg, ' + disk.darkColor + ' 0%, ' + disk.color + ' 50%, ' + disk.darkColor + ' 100%)';
+        insertedLipEl.classList.add('active');
+
+        await delay(260);
+
+        proxy.remove();
+        driveLedEl.classList.remove('blinking');
+        driveLcdEl.textContent = 'MONTATO: ' + disk.filename;
+        driveEjectBtn.disabled = false;
+        isAnimating = false;
+
+        openOSModal(disk);
+      }
+
+      /* Animazione espulsione dischetto dal lettore MDG-3500 */
+      async function ejectFloppyDisk() {
+        if (isAnimating || !activeDisk) return;
+        isAnimating = true;
+
+        var diskToEject = activeDisk;
+        var slotEl = rackEl.querySelector('.floppy-slot[data-disk-id="' + diskToEject.id + '"]');
+        var itemEl = slotEl.querySelector('.floppy-item');
+        var destRect = slotEl.getBoundingClientRect();
+        var slotRect = driveSlotEl.getBoundingClientRect();
+
+        closeOSModalUI();
+        driveEjectBtn.disabled = true;
+        driveLcdEl.textContent = 'ESPULSIONE IN CORSO...';
+        driveLedEl.classList.add('blinking');
+        insertedLipEl.classList.remove('active');
+        playEjectSpringSound();
+
+        var startWidth = Math.min(slotRect.width * 0.68, 170);
+        var startHeight = destRect.height * (startWidth / destRect.width);
+        var startLeft = slotRect.left + (slotRect.width - startWidth) / 2;
+        var startTop = slotRect.top + 4;
+
+        var proxy = buildFloppyBodyElement(diskToEject);
+        proxy.className = 'floppy-body flying-floppy-proxy';
+        proxy.style.left = startLeft + 'px';
+        proxy.style.top = startTop + 'px';
+        proxy.style.width = startWidth + 'px';
+        proxy.style.height = startHeight + 'px';
+        proxy.style.transform = 'translateY(-14px) scaleY(0.2)';
+        proxy.style.opacity = '0';
+        document.body.appendChild(proxy);
+
+        proxy.getBoundingClientRect();
+        proxy.style.transition = 'transform 0.2s ease-out, opacity 0.2s ease-out';
+        proxy.style.transform = 'translateY(0) scaleY(1)';
+        proxy.style.opacity = '1';
+
+        await delay(200);
+
+        proxy.style.transition = 'all 0.36s cubic-bezier(0.22, 1, 0.36, 1)';
+        proxy.style.left = destRect.left + 'px';
+        proxy.style.top = destRect.top + 'px';
+        proxy.style.width = destRect.width + 'px';
+        proxy.style.height = destRect.height + 'px';
+
+        await delay(360);
+
+        proxy.remove();
+        itemEl.classList.remove('is-inserted');
+        driveLedEl.classList.remove('blinking');
+        driveLcdEl.textContent = 'PRONTO - INSERISCI DISCHETTO';
+        activeDisk = null;
+        isAnimating = false;
+      }
+
+      /* Apertura / Minimizzazione / Massimizzazione / Chiusura Finestra Modale */
+      function openOSModal(disk) {
+        isMinimized = false;
+        restoreWindowBtn.classList.remove('visible');
+        windowDiskDot.style.backgroundColor = disk.color;
+        modalTitle.textContent = 'A:\\' + disk.filename + ' — ' + disk.subtitle;
+        windowPath.textContent = 'VOLUME A:\\' + disk.filename + ' // LETTURA COMPLETATA';
+        windowFooterInfo.textContent = 'Dischetto montato in A:\\ (' + disk.filename + ')';
+
+        populateModalContent(disk);
+        modalBody.scrollTop = 0;
+        modalOverlay.classList.add('is-open');
+      }
+
+      function closeOSModalUI() {
+        modalOverlay.classList.remove('is-open');
+        osWindow.classList.remove('is-maximized');
+        isMinimized = false;
+        restoreWindowBtn.classList.remove('visible');
+      }
+
+      function minimizeOSModal() {
+        if (!activeDisk) return;
+        isMinimized = true;
+        modalOverlay.classList.remove('is-open');
+        restoreWindowLabel.textContent = activeDisk.filename;
+        restoreWindowBtn.classList.add('visible');
+        playClickSound();
+      }
+
+      function restoreOSModal() {
+        if (!activeDisk) return;
+        isMinimized = false;
+        restoreWindowBtn.classList.remove('visible');
+        modalOverlay.classList.add('is-open');
+        playClickSound();
+      }
+
+      function toggleMaximizeOSModal() {
+        osWindow.classList.toggle('is-maximized');
+        playClickSound();
+      }
+
+      /* Collegamento pulsanti */
+      btnMinimize.addEventListener('click', minimizeOSModal);
+      btnMaximize.addEventListener('click', toggleMaximizeOSModal);
+      btnClose.addEventListener('click', ejectFloppyDisk);
+      footerEjectBtn.addEventListener('click', ejectFloppyDisk);
+      driveEjectBtn.addEventListener('click', ejectFloppyDisk);
+      restoreWindowBtn.addEventListener('click', restoreOSModal);
+
+      sfxToggleBtn.addEventListener('click', function () {
+        sfxEnabled = !sfxEnabled;
+        sfxLabel.textContent = sfxEnabled ? 'SFX: ON' : 'SFX: OFF';
+        if (sfxEnabled) playClickSound();
+      });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && activeDisk && !isAnimating) {
+          ejectFloppyDisk();
+        }
+      });
+
+      /* Avvio iniziale */
+      renderFloppyShelf();
+    });
+  </script>
 </body>
 </html>
