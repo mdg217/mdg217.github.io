@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Sito</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+            color: #333;
+            text-align: center;
+        }
+        .box {
+            background: white;
+            padding: 2rem 3rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #2e7d32;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>Il sito è online! 🚀</h1>
+        <p>Se leggi questo messaggio, HTML, CSS e JavaScript funzionano correttamente.</p>
+        <p id="timestamp"></p>
+    </div>
+
+    <script>
+        document.getElementById('timestamp').textContent = 
+            'Pagina caricata il: ' + new Date().toLocaleString('it-IT');
+    </script>
+</body>
+</html>
