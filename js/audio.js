@@ -30,7 +30,7 @@ window.RetroAudio = (function () {
     return enabled;
   }
 
-  function playHover(mode = 'floppy') {
+  function playHover(mode) {
     if (!enabled) return;
     const audio = ensureContext();
     if (!audio) return;
@@ -59,7 +59,7 @@ window.RetroAudio = (function () {
     osc.stop(now + 0.05);
   }
 
-  function playInsert(mode = 'floppy') {
+  function playInsert(mode) {
     if (!enabled) return;
     const audio = ensureContext();
     if (!audio) return;
@@ -119,7 +119,7 @@ window.RetroAudio = (function () {
     });
   }
 
-  function playEject(mode = 'floppy') {
+  function playEject(mode) {
     if (!enabled) return;
     const audio = ensureContext();
     if (!audio) return;

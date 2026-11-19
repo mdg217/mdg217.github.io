@@ -348,7 +348,7 @@
    * Popola e apre la finestra pop-up interna.
    */
   function openWindow(item) {
-    const drivePrefix = currentMode === 'usb' ? 'USB0:\MARCO_DE_GREGORIO\' : 'A:\MARCO_DE_GREGORIO\';
+    const drivePrefix = currentMode === 'usb' ? 'USB0:\\MARCO_DE_GREGORIO\\' : 'A:\\MARCO_DE_GREGORIO\\';
     const fsType = currentMode === 'usb' ? `exFAT // ${item.usbCapacity}` : 'READ-ONLY // FAT12';
 
     windowDiskDot.style.background = item.color;
@@ -511,7 +511,7 @@
   });
 
   // Switch manuale/automatico tra PC (Floppy) e Smartphone (USB)
-  modeToggle.addEventListener('click', async () => {
+  modeToggle.addEventListener('click', function () {
     if (isBusy) return;
     audio.playClick();
     if (activeItem) {

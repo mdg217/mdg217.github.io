@@ -34,7 +34,7 @@ window.MediaAnimator = (function () {
   /**
    * Mostra il riquadro di anteprima al passaggio del cursore (PC) o al primo tap (Smartphone).
    */
-  function showPreview(itemEl, itemData, mode = 'floppy') {
+  function showPreview(itemEl, itemData, mode) {
     if (!previewCard || !itemEl || !itemData) return;
 
     previewFile.textContent = itemData.filename;
@@ -71,7 +71,7 @@ window.MediaAnimator = (function () {
   /**
    * Aggiorna i display e i LED di Floppy Drive e USB Hub.
    */
-  function setHardwareState(state, itemData, mode = 'floppy') {
+  function setHardwareState(state, itemData, mode) {
     clearInterval(sectorTimer);
 
     if (mode === 'usb') {
@@ -99,7 +99,7 @@ window.MediaAnimator = (function () {
         pluggedUsbStick.classList.add('visible');
         usbOledStatus.textContent = 'CONNECTED // OTG';
         usbOledSpeed.textContent = itemData.usbCapacity;
-        usbOledMessage.textContent = `USB0:\${itemData.filename}`;
+        usbOledMessage.textContent = `USB0:\\${itemData.filename}`;
       }
       return;
     }
@@ -137,7 +137,7 @@ window.MediaAnimator = (function () {
       insertedTab.classList.add('visible');
       lcdStatus.textContent = 'MOUNTED';
       lcdSector.textContent = 'TRK:79 SEC:18';
-      lcdMessage.textContent = `A:\>${itemData.filename}`;
+      lcdMessage.textContent = `A:\\>${itemData.filename}`;
     }
   }
 
@@ -295,7 +295,6 @@ window.MediaAnimator = (function () {
 
     usbEl.classList.add('is-inserted');
 
-    // Il connettore metallico superiore deve allinearsi esattamente sotto la porta USB
     const deltaX = (portRect.left + portRect.width / 2) - (startRect.left + startRect.width / 2);
     const deltaYApproach = (portRect.bottom + 14) - startRect.top;
     const deltaYPlugged = (portRect.bottom - 18) - startRect.top;
@@ -387,9 +386,11 @@ window.MediaAnimator = (function () {
     showPreview,
     hidePreview,
     setHardwareState,
-    animateInsert: (el, data, mode) =>
-      mode === 'usb' ? animateUsbInsert(el, data) : animateFloppyInsert(el, data),
-    animateEject: (el, data, mode) =>
-      mode === 'usb' ? animateUsbEject(el, data) : animateFloppyEject(el, data)
+    animateInsert: function (el, data, mode) {
+      return mode === 'usb' ? animateUsbInsert(el, data) : animateFloppyInsert(el, data);
+    },
+    animateEject: function (el, data, mode) {
+      return mode === 'usb' ? animateUsbEject(el, data) : animateFloppyEject(el, data);
+    }
   };
 })();
