@@ -3,6 +3,7 @@
  * Sintetizzatore Web Audio API:
  * - Suoni meccanici retrò per il lettore Floppy Disk (PC)
  * - Chime digitali moderni di connessione/disconnessione USB (Smartphone)
+ * - Effetti chiptune 8-bit per la mascotte Game Boy
  */
 window.RetroAudio = (function () {
   let ctx = null;
@@ -67,7 +68,6 @@ window.RetroAudio = (function () {
     const now = audio.currentTime;
 
     if (mode === 'usb') {
-      // Chime digitale ascendente di connessione dispositivo USB (Do5 -> Sol5)
       const notes = [523.25, 783.99];
       notes.forEach((freq, idx) => {
         const t = now + idx * 0.11;
@@ -87,7 +87,6 @@ window.RetroAudio = (function () {
       return;
     }
 
-    // Floppy meccanico: scatto + motore passo-passo
     const clickOsc = audio.createOscillator();
     const clickGain = audio.createGain();
     clickOsc.type = 'square';
@@ -127,7 +126,6 @@ window.RetroAudio = (function () {
     const now = audio.currentTime;
 
     if (mode === 'usb') {
-      // Chime digitale discendente di rimozione sicura USB (Sol5 -> Do5)
       const notes = [783.99, 523.25];
       notes.forEach((freq, idx) => {
         const t = now + idx * 0.1;
@@ -185,12 +183,54 @@ window.RetroAudio = (function () {
     osc.stop(now + 0.045);
   }
 
+  /**
+   * Suono chiptune 8-bit stile Game Boy per i bottoni della mascotte.
+   */
+  function playGameBoyBlip(variant) {
+    if (!enabled) return;
+    const audio = ensureContext();
+    if (!audio) return;
+
+    const now = audio.currentTime;
+    const osc = audio.createOscillator();
+    const gain = audio.createGain();
+
+    osc.type = 'square';
+
+    if (variant === 'boot') {
+      // Classico doppio salto Do6 -> Do7 stile Game Boy
+      osc.frequency.setValueAtTime(1046.5, now);
+      osc.frequency.setValueAtTime(2093.0, now + 0.07);
+      gain.gain.setValueAtTime(0.032, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+      osc.connect(gain);
+      gain.connect(audio.destination);
+      osc.start(now);
+      osc.stop(now + 0.23);
+      return;
+    }
+
+    const startFreq = variant === 'prev' ? 660 : 880;
+    const endFreq = variant === 'prev' ? 520 : 1175;
+    osc.frequency.setValueAtTime(startFreq, now);
+    osc.frequency.setValueAtTime(endFreq, now + 0.035);
+
+    gain.gain.setValueAtTime(0.03, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.08);
+
+    osc.connect(gain);
+    gain.connect(audio.destination);
+    osc.start(now);
+    osc.stop(now + 0.085);
+  }
+
   return {
     isEnabled,
     toggle,
     playHover,
     playInsert,
     playEject,
-    playClick
+    playClick,
+    playGameBoyBlip
   };
 })();

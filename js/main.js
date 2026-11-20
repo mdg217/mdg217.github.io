@@ -2,12 +2,14 @@
  * js/main.js
  * Controller principale:
  * - Passa automaticamente tra modalità PC (Floppy Disk) e Smartphone (Pennette USB)
- * - Gestisce anteprime hover/tap, animazioni di inserimento, finestra OS con i 3 bottoni e scorciatoie.
+ * - Gestisce anteprime hover/tap, animazioni di inserimento, finestra OS con i 3 bottoni,
+ *   scorciatoie da tastiera e integrazione con la mascotte Game Boy.
  */
 (function () {
   const items = window.PORTFOLIO_DATA || [];
   const audio = window.RetroAudio;
   const animator = window.MediaAnimator;
+  const mascot = window.GameBoyMascot;
 
   // Riferimenti DOM generali
   const body = document.body;
@@ -80,6 +82,9 @@
 
     clearPreviewState();
     animator.setHardwareState('idle', null, newMode);
+    if (mascot) {
+      mascot.setMode(newMode);
+    }
   }
 
   /**
@@ -150,7 +155,6 @@
         </div>
       `;
 
-      // Su desktop (mouse): hover mostra anteprima, clic inserisce
       usbBtn.addEventListener('pointerenter', (e) => {
         if (e.pointerType !== 'mouse') return;
         if (isBusy || usbBtn.classList.contains('is-inserted')) return;
@@ -163,7 +167,6 @@
         clearPreviewState();
       });
 
-      // Su touch (smartphone): primo tap alza la pennetta e mostra anteprima; secondo tap collega
       usbBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         if (isBusy || usbBtn.classList.contains('is-inserted')) return;
@@ -381,7 +384,6 @@
     setAllMediaDisabled(true);
     setEjectButtonsDisabled(true);
 
-    // Se un altro supporto è già inserito, lo espelle prima
     if (activeItem) {
       backdrop.classList.remove('is-open');
       minimizedBar.innerHTML = '';
@@ -398,6 +400,10 @@
 
     activeItem = item;
     openWindow(item);
+
+    if (mascot) {
+      mascot.onMediaInserted(item, currentMode);
+    }
 
     isBusy = false;
     setAllMediaDisabled(false);
@@ -456,6 +462,10 @@
 
     audio.playEject(currentMode);
     await animator.animateEject(mediaEl, itemToEject, currentMode);
+
+    if (mascot) {
+      mascot.onMediaEjected(currentMode);
+    }
 
     isBusy = false;
     setAllMediaDisabled(false);
@@ -562,9 +572,19 @@
     }
   });
 
+  const cvDownloadBtn = document.getElementById('cv-download-btn');
+  if (cvDownloadBtn) {
+    cvDownloadBtn.addEventListener('click', () => {
+      audio.playClick();
+    });
+  }
+
   // Inizializzazione
   updateClock();
   setInterval(updateClock, 1000);
   renderMediaRacks();
+  if (mascot) {
+    mascot.init(currentMode);
+  }
   applyMode(currentMode);
 })();
