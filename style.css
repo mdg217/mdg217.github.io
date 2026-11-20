@@ -22,6 +22,15 @@
   --usb-accent: #38bdf8;
   --usb-oled-bg: #090d16;
 
+  /* Game Boy DMG-01 Mascot Palette */
+  --gb-shell-top: #e2dfd5;
+  --gb-shell-bot: #c9c4b6;
+  --gb-bezel: #585e6e;
+  --gb-lcd-bg: #9bbc0f;
+  --gb-lcd-dark: #0f380f;
+  --gb-lcd-mid: #306230;
+  --gb-btn-magenta: #9b1c54;
+
   /* Window UI */
   --win-bg: #f6f5f0;
   --win-surface: #ffffff;
@@ -700,7 +709,474 @@ body.mode-usb .sfx-dot:not(.muted) {
 }
 
 /* ==========================================================================
-   5. ANTEPRIMA FLUTTUANTE (HOVER / TAP PREVIEW CARD)
+   5. MASCOTTE INTERATTIVA GAME BOY (LATO SINISTRO)
+   ========================================================================== */
+.gb-mascot {
+  position: fixed;
+  left: 22px;
+  top: 44%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  z-index: 25;
+  pointer-events: auto;
+}
+
+/* Corpo del piccolo Game Boy DMG-01 */
+.gb-device {
+  width: 88px;
+  height: 142px;
+  background: linear-gradient(175deg, var(--gb-shell-top) 0%, var(--gb-shell-bot) 100%);
+  border-radius: 8px 8px 22px 8px;
+  border: 1.5px solid #f7f5ee;
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.55),
+    inset 0 -3px 0 #9f9a8c,
+    inset 0 2px 0 rgba(255, 255, 255, 0.8);
+  padding: 6px 7px 9px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  flex-shrink: 0;
+  animation: gbFloat 3.6s ease-in-out infinite;
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.22s ease;
+}
+
+.gb-device:hover {
+  box-shadow:
+    0 18px 34px rgba(0, 0, 0, 0.65),
+    0 0 0 2px rgba(155, 188, 15, 0.45);
+}
+
+.gb-mascot.is-collapsed .gb-device {
+  cursor: pointer;
+  transform: scale(0.84);
+}
+
+.gb-mascot.is-collapsed .gb-device:hover {
+  transform: scale(0.9);
+}
+
+.gb-mascot.is-excited .gb-device {
+  animation: gbBounce 0.45s cubic-bezier(0.22, 1, 0.36, 1) 2;
+}
+
+@keyframes gbFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes gbBounce {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  30% { transform: translateY(-9px) rotate(-4deg); }
+  70% { transform: translateY(-3px) rotate(3deg); }
+}
+
+.gb-top-lines {
+  display: flex;
+  justify-content: space-between;
+  height: 3px;
+  border-bottom: 1px solid #b5b0a2;
+  margin: -2px -3px 1px;
+  padding: 0 6px;
+}
+
+.gb-top-lines span {
+  width: 1px;
+  height: 100%;
+  background: #b5b0a2;
+}
+
+/* Cornice schermo Game Boy */
+.gb-screen-bezel {
+  background: var(--gb-bezel);
+  border-radius: 5px 5px 14px 5px;
+  padding: 4px 6px 6px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.55);
+}
+
+.gb-screen-header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 3px;
+}
+
+.gb-batt-led {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #ef4444;
+  box-shadow: 0 0 5px #ef4444;
+}
+
+.gb-bezel-text {
+  font-family: var(--font-mono);
+  font-size: 0.36rem;
+  letter-spacing: 0.3px;
+  color: #cbd5e1;
+  white-space: nowrap;
+}
+
+/* Schermo LCD verde oliva con faccina animata */
+.gb-lcd {
+  width: 100%;
+  height: 44px;
+  background: var(--gb-lcd-bg);
+  border: 1.5px solid #353b47;
+  border-radius: 2px;
+  box-shadow: inset 0 2px 5px rgba(15, 56, 15, 0.38);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.gb-lcd::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, rgba(15, 56, 15, 0.08) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 56, 15, 0.08) 1px, transparent 1px);
+  background-size: 3px 3px;
+  pointer-events: none;
+}
+
+.gb-face {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  z-index: 1;
+}
+
+.gb-eyes {
+  display: flex;
+  gap: 12px;
+}
+
+.gb-eye {
+  width: 6px;
+  height: 8px;
+  background: var(--gb-lcd-dark);
+  border-radius: 1px;
+  animation: gbBlink 4.2s infinite;
+}
+
+.gb-mascot.is-excited .gb-eye {
+  height: 5px;
+  border-radius: 6px 6px 0 0;
+  background: transparent;
+  border-top: 3px solid var(--gb-lcd-dark);
+  animation: none;
+}
+
+@keyframes gbBlink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.12); }
+}
+
+.gb-mouth {
+  width: 12px;
+  height: 4px;
+  border-bottom: 2.5px solid var(--gb-lcd-dark);
+  border-radius: 0 0 6px 6px;
+  transition: all 0.12s ease;
+}
+
+.gb-mascot.is-talking .gb-mouth {
+  height: 6px;
+  background: var(--gb-lcd-dark);
+  border-radius: 2px 2px 6px 6px;
+  animation: gbTalk 0.22s infinite alternate;
+}
+
+@keyframes gbTalk {
+  from { transform: scaleY(0.55) scaleX(1.05); }
+  to { transform: scaleY(1.15) scaleX(0.9); }
+}
+
+.gb-brand-row {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  padding-left: 1px;
+}
+
+.gb-brand-title {
+  font-family: var(--font-display);
+  font-size: 0.46rem;
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: 0.3px;
+  color: #283593;
+}
+
+.gb-brand-tm {
+  font-family: var(--font-mono);
+  font-size: 0.34rem;
+  color: #283593;
+}
+
+/* D-Pad e bottoni A/B */
+.gb-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1px 2px;
+}
+
+.gb-dpad {
+  width: 22px;
+  height: 22px;
+  background: transparent;
+  border: none;
+  position: relative;
+  cursor: pointer;
+}
+
+.gb-dpad:active {
+  transform: scale(0.92);
+}
+
+.gb-dpad-h,
+.gb-dpad-v {
+  position: absolute;
+  background: #232730;
+  border-radius: 1.5px;
+}
+
+.gb-dpad-h {
+  left: 0;
+  top: 7px;
+  width: 22px;
+  height: 8px;
+}
+
+.gb-dpad-v {
+  left: 7px;
+  top: 0;
+  width: 8px;
+  height: 22px;
+}
+
+.gb-dpad-center {
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #171a20;
+}
+
+.gb-ab-group {
+  display: flex;
+  gap: 4px;
+  transform: rotate(-24deg);
+}
+
+.gb-btn-ab {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  border: none;
+  background: var(--gb-btn-magenta);
+  box-shadow: 0 2px 0 #5b0f30;
+  color: rgba(255, 255, 255, 0.85);
+  font-family: var(--font-mono);
+  font-size: 0.42rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.08s ease;
+}
+
+.gb-btn-ab:active {
+  transform: translateY(1.5px);
+  box-shadow: none;
+}
+
+.gb-bottom-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0 2px;
+}
+
+.gb-pills {
+  display: flex;
+  gap: 4px;
+  transform: rotate(-24deg);
+  margin-left: 14px;
+}
+
+.gb-pills span {
+  width: 9px;
+  height: 3px;
+  border-radius: 999px;
+  background: #7b776c;
+}
+
+.gb-speaker {
+  display: flex;
+  gap: 2.5px;
+  transform: rotate(-28deg);
+}
+
+.gb-speaker span {
+  width: 1.8px;
+  height: 9px;
+  border-radius: 1px;
+  background: #8f8a7d;
+}
+
+/* Badge "?" visibile solo quando la mascotte è ridotta a icona */
+.gb-restore-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #9bbc0f;
+  color: #0f380f;
+  border: 2px solid #181c24;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.gb-mascot.is-collapsed .gb-restore-badge {
+  display: flex;
+  animation: pulsePill 2s infinite;
+}
+
+/* Fumetto di dialogo accanto al Game Boy */
+.gb-bubble {
+  width: 232px;
+  background: rgba(16, 22, 32, 0.94);
+  border: 1.5px solid rgba(155, 188, 15, 0.65);
+  border-radius: 12px 12px 12px 4px;
+  padding: 10px 12px;
+  box-shadow:
+    0 14px 30px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(10px);
+  position: relative;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.gb-bubble::before {
+  content: '';
+  position: absolute;
+  left: -7px;
+  bottom: 14px;
+  width: 12px;
+  height: 12px;
+  background: rgba(16, 22, 32, 0.94);
+  border-left: 1.5px solid rgba(155, 188, 15, 0.65);
+  border-bottom: 1.5px solid rgba(155, 188, 15, 0.65);
+  transform: rotate(45deg);
+}
+
+.gb-mascot.is-collapsed .gb-bubble {
+  display: none;
+}
+
+.gb-bubble-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.gb-bubble-tag {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #9bbc0f;
+  letter-spacing: 0.4px;
+}
+
+.gb-bubble-hide {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gb-bubble-hide:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+}
+
+.gb-bubble-text {
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: #f1f5f9;
+  min-height: 44px;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.gb-bubble-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 6px;
+}
+
+.gb-bubble-hint {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  color: #94a3b8;
+}
+
+.gb-bubble-hint strong {
+  color: #f472b6;
+}
+
+.gb-bubble-next {
+  background: rgba(155, 188, 15, 0.2);
+  border: 1px solid rgba(155, 188, 15, 0.55);
+  color: #d9f99d;
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.gb-bubble-next:hover {
+  background: rgba(155, 188, 15, 0.34);
+}
+
+/* ==========================================================================
+   6. ANTEPRIMA FLUTTUANTE (HOVER / TAP PREVIEW CARD)
    ========================================================================== */
 .disk-preview-card {
   position: fixed;
@@ -779,7 +1255,7 @@ body.mode-usb .preview-action-btn {
 }
 
 /* ==========================================================================
-   6. LIBRERIA INFERIORE: FLOPPY RACK (PC) & USB DOCK (SMARTPHONE)
+   7. LIBRERIA INFERIORE: FLOPPY RACK (PC) & USB DOCK (SMARTPHONE)
    ========================================================================== */
 .library-stage {
   width: 100%;
@@ -951,7 +1427,7 @@ body.mode-usb .preview-action-btn {
 }
 
 /* ==========================================================================
-   7. PENNETTE USB & DOCK MODERNO (SMARTPHONE)
+   8. PENNETTE USB & DOCK MODERNO (SMARTPHONE)
    ========================================================================== */
 .usb-rack {
   width: 100%;
@@ -1116,7 +1592,7 @@ body.mode-usb .preview-action-btn {
 }
 
 /* ==========================================================================
-   8. FINESTRA POP-UP INTERNA CON I 3 BOTTONI
+   9. FINESTRA POP-UP INTERNA CON I 3 BOTTONI
    ========================================================================== */
 .window-backdrop {
   position: fixed;
@@ -1295,7 +1771,7 @@ body.mode-usb .preview-action-btn {
 }
 
 /* ==========================================================================
-   9. COMPONENTI INTERNI ALLE PAGINE DEL PORTFOLIO
+   10. COMPONENTI INTERNI ALLE PAGINE DEL PORTFOLIO
    ========================================================================== */
 .hero-card {
   background: var(--win-surface);
@@ -1529,7 +2005,22 @@ body.mode-usb .preview-action-btn {
   background: #334155;
 }
 
-/* Responsive mobile */
+/* ==========================================================================
+   11. RESPONSIVE MOBILE & TABLET
+   ========================================================================== */
+@media (max-width: 1160px) and (min-width: 769px) {
+  .gb-mascot {
+    left: 14px;
+    top: auto;
+    bottom: 186px;
+    transform: none;
+  }
+
+  .gb-bubble {
+    width: 210px;
+  }
+}
+
 @media (max-width: 768px) {
   .os-hint,
   .os-separator {
@@ -1543,5 +2034,302 @@ body.mode-usb .preview-action-btn {
 
   .window-body {
     padding: 15px;
+  }
+
+  /* Mascotte Game Boy compatta nello spazio centrale tra Hub USB e Dock */
+  .gb-mascot {
+    left: 10px;
+    right: 10px;
+    top: 56%;
+    transform: translateY(-50%);
+    gap: 9px;
+    align-items: center;
+    pointer-events: none;
+  }
+
+  .gb-device,
+  .gb-bubble {
+    pointer-events: auto;
+  }
+
+  .gb-device {
+    width: 72px;
+    height: 116px;
+    padding: 5px 5px 7px;
+  }
+
+  .gb-lcd {
+    height: 34px;
+  }
+
+  .gb-bezel-text {
+    font-size: 0.3rem;
+  }
+
+  .gb-brand-title {
+    font-size: 0.4rem;
+  }
+
+  .gb-dpad {
+    width: 18px;
+    height: 18px;
+  }
+
+  .gb-dpad-h {
+    top: 6px;
+    width: 18px;
+    height: 6px;
+  }
+
+  .gb-dpad-v {
+    left: 6px;
+    width: 6px;
+    height: 18px;
+  }
+
+  .gb-dpad-center {
+    left: 6.5px;
+    top: 6.5px;
+    width: 5px;
+    height: 5px;
+  }
+
+  .gb-btn-ab {
+    width: 11px;
+    height: 11px;
+    font-size: 0.36rem;
+  }
+
+  .gb-bubble {
+    flex: 1;
+    width: auto;
+    max-width: 270px;
+    padding: 8px 10px;
+    border-radius: 10px;
+  }
+
+  .gb-bubble::before {
+    bottom: auto;
+    top: 50%;
+    transform: translateY(-50%) rotate(45deg);
+  }
+
+  .gb-bubble-text {
+    font-size: 0.73rem;
+    min-height: 36px;
+    margin-bottom: 6px;
+  }
+}
+
+/* ==========================================================================
+   12. ICONA FOGLIO PDF (LATO DESTRO - DOWNLOAD CV)
+   ========================================================================== */
+.cv-dock-right {
+  position: fixed;
+  right: 22px;
+  top: 44%;
+  transform: translateY(-50%);
+  z-index: 25;
+  pointer-events: auto;
+}
+
+.cv-sheet-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  cursor: pointer;
+  animation: cvFloat 3.8s ease-in-out infinite;
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cv-sheet-btn:hover,
+.cv-sheet-btn:focus-visible {
+  transform: translateY(-6px) scale(1.05);
+  outline: none;
+}
+
+@keyframes cvFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* Foglio di carta stile documento OS con angolo piegato */
+.cv-sheet-paper {
+  width: 76px;
+  height: 98px;
+  background: linear-gradient(165deg, #ffffff 0%, #f1efe7 100%);
+  border: 1.5px solid #cbd5e1;
+  border-radius: 7px 18px 7px 7px;
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.52),
+    inset 0 -3px 0 #cbd5e1;
+  padding: 10px 9px 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  transition: box-shadow 0.22s ease, border-color 0.22s ease;
+}
+
+.cv-sheet-btn:hover .cv-sheet-paper,
+.cv-sheet-btn:focus-visible .cv-sheet-paper {
+  border-color: #f87171;
+  box-shadow:
+    0 18px 34px rgba(0, 0, 0, 0.65),
+    0 0 0 2px rgba(239, 68, 68, 0.45);
+}
+
+/* Angolo superiore destro piegato */
+.cv-sheet-corner {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 18px;
+  height: 18px;
+  background: linear-gradient(225deg, #1b2230 48%, #cbd5e1 50%, #e2e8f0 100%);
+  border-bottom-left-radius: 5px;
+}
+
+.cv-sheet-badge {
+  align-self: flex-start;
+  background: #dc2626;
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(220, 38, 38, 0.35);
+}
+
+.cv-sheet-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 4px 0;
+}
+
+.cv-sheet-lines span {
+  height: 3px;
+  width: 100%;
+  background: #94a3b8;
+  border-radius: 2px;
+}
+
+.cv-sheet-lines span:nth-child(2) {
+  width: 84%;
+}
+
+.cv-sheet-lines span:nth-child(4) {
+  width: 68%;
+}
+
+.cv-sheet-arrow {
+  align-self: flex-end;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #1e293b;
+  color: #f8fafc;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.18s ease, transform 0.18s ease;
+}
+
+.cv-sheet-btn:hover .cv-sheet-arrow {
+  background: #dc2626;
+  transform: translateY(2px);
+}
+
+.cv-sheet-caption {
+  background: rgba(16, 22, 32, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  padding: 4px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45);
+}
+
+.cv-sheet-filename {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #f8fafc;
+  letter-spacing: 0.3px;
+}
+
+.cv-sheet-sub {
+  font-family: var(--font-mono);
+  font-size: 0.54rem;
+  color: #fca5a5;
+}
+
+/* Tablet */
+@media (max-width: 1160px) and (min-width: 769px) {
+  .cv-dock-right {
+    right: 14px;
+    top: auto;
+    bottom: 186px;
+    transform: none;
+  }
+}
+
+/* Smartphone: compatto in alto a destra sotto la barra OS per non sovrapporsi al Game Boy */
+@media (max-width: 768px) {
+  .cv-dock-right {
+    top: 46px;
+    right: 10px;
+    transform: none;
+  }
+
+  .cv-sheet-btn {
+    flex-direction: row;
+    gap: 6px;
+    background: rgba(16, 22, 32, 0.92);
+    border: 1px solid rgba(248, 113, 113, 0.45);
+    border-radius: 9px;
+    padding: 5px 8px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  }
+
+  .cv-sheet-paper {
+    width: 28px;
+    height: 34px;
+    padding: 4px;
+    border-radius: 4px 9px 4px 4px;
+    box-shadow: none;
+  }
+
+  .cv-sheet-corner {
+    width: 8px;
+    height: 8px;
+  }
+
+  .cv-sheet-badge {
+    font-size: 0.42rem;
+    padding: 1px 3px;
+  }
+
+  .cv-sheet-lines,
+  .cv-sheet-arrow {
+    display: none;
+  }
+
+  .cv-sheet-caption {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    align-items: flex-start;
   }
 }

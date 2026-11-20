@@ -139,6 +139,100 @@
       </div>
     </section>
 
+    <!-- Mascotte Interattiva Game Boy sul lato sinistro -->
+    <aside class="gb-mascot" id="gb-mascot" aria-label="Guida interattiva Game Boy">
+      <div class="gb-device" id="gb-device" title="Clicca per aprire/chiudere la guida">
+        <div class="gb-top-lines" aria-hidden="true">
+          <span></span><span></span>
+        </div>
+
+        <div class="gb-screen-bezel">
+          <div class="gb-screen-header">
+            <span class="gb-batt-led"></span>
+            <span class="gb-bezel-text">DOT MATRIX GUIDE</span>
+          </div>
+          <div class="gb-lcd" id="gb-lcd">
+            <div class="gb-face" id="gb-face" aria-hidden="true">
+              <div class="gb-eyes">
+                <span class="gb-eye"></span>
+                <span class="gb-eye"></span>
+              </div>
+              <div class="gb-mouth" id="gb-mouth"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="gb-brand-row" aria-hidden="true">
+          <span class="gb-brand-title">MARCO BOY</span>
+          <span class="gb-brand-tm">TM</span>
+        </div>
+
+        <div class="gb-controls">
+          <button type="button" class="gb-dpad" id="gb-dpad" title="Consiglio precedente" aria-label="Consiglio precedente">
+            <span class="gb-dpad-h"></span>
+            <span class="gb-dpad-v"></span>
+            <span class="gb-dpad-center"></span>
+          </button>
+
+          <div class="gb-ab-group">
+            <button type="button" class="gb-btn-ab gb-btn-b" id="gb-btn-b" title="Riduci o espandi guida" aria-label="Riduci o espandi guida">B</button>
+            <button type="button" class="gb-btn-ab gb-btn-a" id="gb-btn-a" title="Prossimo consiglio" aria-label="Prossimo consiglio">A</button>
+          </div>
+        </div>
+
+        <div class="gb-bottom-row" aria-hidden="true">
+          <div class="gb-pills">
+            <span></span><span></span>
+          </div>
+          <div class="gb-speaker">
+            <span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+
+        <span class="gb-restore-badge" aria-hidden="true">?</span>
+      </div>
+
+      <!-- Fumetto di dialogo -->
+      <div class="gb-bubble" id="gb-bubble" role="status" aria-live="polite">
+        <div class="gb-bubble-header">
+          <span class="gb-bubble-tag" id="gb-bubble-tag">GUIDE // TIP 1/4</span>
+          <button type="button" class="gb-bubble-hide" id="gb-bubble-hide" title="Riduci mascotte" aria-label="Riduci mascotte">_</button>
+        </div>
+        <p class="gb-bubble-text" id="gb-bubble-text"></p>
+        <div class="gb-bubble-footer">
+          <span class="gb-bubble-hint">Premi <strong>A</strong> per altri tip</span>
+          <button type="button" class="gb-bubble-next" id="gb-bubble-next">Avanti ▸</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Icona Foglio PDF per scaricare il CV sul lato destro -->
+    <aside class="cv-dock-right" aria-label="Scarica Curriculum Vitae in PDF">
+      <a
+        href="CV_Marco_DeGregorio.pdf"
+        download="CV_Marco_DeGregorio.pdf"
+        class="cv-sheet-btn"
+        id="cv-download-btn"
+        title="Scarica il Curriculum Vitae di Marco De Gregorio (PDF)"
+      >
+        <div class="cv-sheet-paper" aria-hidden="true">
+          <span class="cv-sheet-corner"></span>
+          <span class="cv-sheet-badge">PDF</span>
+          <div class="cv-sheet-lines">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <span class="cv-sheet-arrow">↓</span>
+        </div>
+        <div class="cv-sheet-caption">
+          <span class="cv-sheet-filename">CV_MARCO.PDF</span>
+          <span class="cv-sheet-sub">SCARICA CV</span>
+        </div>
+      </a>
+    </aside>
+
     <!-- Tooltip / Card fluttuante per l'anteprima (condivisa tra Floppy e USB) -->
     <aside class="disk-preview-card" id="disk-preview" role="tooltip" aria-hidden="true">
       <div class="preview-header">
@@ -223,6 +317,7 @@
   <script src="js/data.js"></script>
   <script src="js/audio.js"></script>
   <script src="js/animations.js"></script>
+  <script src="js/mascot.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>
