@@ -16,6 +16,13 @@ window.LESSONS_DATA = [
     title: 'Definizione di vettore con Somma e Sottrazione',
   },
   {
+    youtube: 'https://youtu.be/49C7nPH9CGM',
+    episode: 'EP. 02',
+    category: 'Fisica',
+    duration: '01:00',
+    title: 'Spiegazione del piano inclinato',
+  },
+  {
     youtube: 'https://www.youtube.com/watch?v=lvB247RuzAk',
     episode: 'EP. 01',
     category: 'Matematica',
