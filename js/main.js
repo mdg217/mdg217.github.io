@@ -579,6 +579,16 @@
     });
   }
 
+  const crtLessonsBtn = document.getElementById('crt-lessons-btn');
+  if (crtLessonsBtn) {
+    crtLessonsBtn.addEventListener('mouseenter', () => {
+      audio.playHover('floppy');
+    });
+    crtLessonsBtn.addEventListener('click', () => {
+      audio.playClick();
+    });
+  }
+
   // Inizializzazione
   updateClock();
   setInterval(updateClock, 1000);
