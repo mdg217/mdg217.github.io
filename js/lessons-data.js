@@ -23,6 +23,13 @@ window.LESSONS_DATA = [
     title: 'Spiegazione del piano inclinato',
   },
   {
+    youtube: 'https://www.youtube.com/watch?v=MYxR6z47uKo',
+    episode: 'EP. 03',
+    category: 'Fisica',
+    duration: '01:00',
+    title: 'Esercizio piano inclinato',
+  },
+  {
     youtube: 'https://www.youtube.com/watch?v=lvB247RuzAk',
     episode: 'EP. 01',
     category: 'Matematica',
