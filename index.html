@@ -14,7 +14,7 @@
   <header class="os-topbar">
     <div class="os-topbar-left">
       <span class="os-logo-badge">MDG</span>
-      <span class="os-title">Marco De Gregorio <strong>v2.6</strong></span>
+      <span class="os-title">MarcoOS <strong>v2.6</strong></span>
       <span class="os-separator">|</span>
       <span class="os-hint" id="os-hint">Seleziona un floppy disk o premi 1-5</span>
     </div>
@@ -38,6 +38,51 @@
 
   <!-- Area principale a singola schermata (zero scrolling) -->
   <main class="workspace" id="workspace">
+
+    <!-- ================================================================
+         TV A TUBO CATODICO (IN ALTO A SINISTRA - SEZIONE LESSONS / TUTORIAL)
+         ================================================================ -->
+    <aside class="crt-tv-dock" aria-label="Apri sezione video Lessons e Tutorial">
+      <a
+        href="lessons.html"
+        class="crt-tv-btn"
+        id="crt-lessons-btn"
+        title="Apri la pagina Lessons & Video Tutorial"
+      >
+        <!-- Antenne a V stile anni '80 -->
+        <div class="crt-antennas" aria-hidden="true">
+          <span class="crt-antenna crt-antenna-left"></span>
+          <span class="crt-antenna crt-antenna-right"></span>
+          <span class="crt-antenna-base"></span>
+        </div>
+
+        <!-- Scocca TV CRT -->
+        <div class="crt-cabinet">
+          <div class="crt-screen-frame">
+            <div class="crt-screen">
+              <span class="crt-ch-badge">CH 03</span>
+              <span class="crt-screen-title">LESSONS</span>
+              <span class="crt-screen-sub">▶ TUTORIALS</span>
+            </div>
+          </div>
+
+          <!-- Manopole e griglia altoparlante laterale -->
+          <div class="crt-side-panel" aria-hidden="true">
+            <span class="crt-dial"></span>
+            <span class="crt-dial"></span>
+            <div class="crt-grille">
+              <span></span><span></span><span></span>
+            </div>
+            <span class="crt-power-led"></span>
+          </div>
+        </div>
+
+        <div class="crt-caption">
+          <span class="crt-caption-title">LESSONS.TV</span>
+          <span class="crt-caption-sub">VIDEO &amp; TUTORIAL</span>
+        </div>
+      </a>
+    </aside>
 
     <!-- ================================================================
          MODALITÀ DESKTOP / PC: LETTORE FLOPPY DISK RETRÒ
@@ -140,7 +185,7 @@
     </section>
 
     <!-- Mascotte Interattiva Game Boy sul lato sinistro -->
-    <aside class="gb-mascot" id="gb-mascot" aria-label="Guida interattiva Game Boy">
+    <aside class="gb-mascot" id="gb-mascot" aria-label="Guida interattiva console retrò">
       <div class="gb-device" id="gb-device" title="Clicca per aprire/chiudere la guida">
         <div class="gb-top-lines" aria-hidden="true">
           <span></span><span></span>
@@ -163,8 +208,8 @@
         </div>
 
         <div class="gb-brand-row" aria-hidden="true">
-          <span class="gb-brand-title">HELP BOY</span>
-          <span class="gb-brand-tm">TM</span>
+          <span class="gb-brand-title">MDG-01</span>
+          <span class="gb-brand-tm">OS</span>
         </div>
 
         <div class="gb-controls">

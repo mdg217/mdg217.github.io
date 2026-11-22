@@ -714,7 +714,7 @@ body.mode-usb .sfx-dot:not(.muted) {
 .gb-mascot {
   position: fixed;
   left: 22px;
-  top: 44%;
+  top: 58%;
   transform: translateY(-50%);
   display: flex;
   align-items: flex-end;
@@ -2326,6 +2326,371 @@ body.mode-usb .preview-action-btn {
   }
 
   .cv-sheet-caption {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    align-items: flex-start;
+  }
+}
+
+/* ==========================================================================
+   13. TV A TUBO CATODICO (IN ALTO A SINISTRA - LESSONS / TUTORIAL)
+   ========================================================================== */
+.crt-tv-dock {
+  position: fixed;
+  top: 50px;
+  left: 22px;
+  z-index: 26;
+  pointer-events: auto;
+}
+
+.crt-tv-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  cursor: pointer;
+  animation: crtFloat 4.1s ease-in-out infinite;
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.crt-tv-btn:hover,
+.crt-tv-btn:focus-visible {
+  transform: translateY(-5px) scale(1.04);
+  outline: none;
+}
+
+@keyframes crtFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* Antenne a V sopra la TV */
+.crt-antennas {
+  width: 64px;
+  height: 18px;
+  position: relative;
+  margin-bottom: -6px;
+}
+
+.crt-antenna {
+  position: absolute;
+  bottom: 2px;
+  width: 2px;
+  height: 22px;
+  background: linear-gradient(180deg, #e2e8f0 0%, #64748b 100%);
+  border-radius: 2px;
+  transform-origin: bottom center;
+}
+
+.crt-antenna::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -1.5px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #f8fafc;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.7);
+}
+
+.crt-antenna-left {
+  left: 26px;
+  transform: rotate(-32deg);
+}
+
+.crt-antenna-right {
+  right: 26px;
+  transform: rotate(32deg);
+}
+
+.crt-antenna-base {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 18px;
+  height: 5px;
+  background: #334155;
+  border-radius: 4px 4px 0 0;
+  border: 1px solid #64748b;
+}
+
+/* Scocca stile televisore CRT anni '80 */
+.crt-cabinet {
+  width: 126px;
+  height: 86px;
+  background: linear-gradient(165deg, #4b382a 0%, #2d2118 100%);
+  border: 2px solid #7c5c43;
+  border-radius: 12px;
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.58),
+    inset 0 2px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -4px 0 #1c140e;
+  padding: 7px 7px 7px 8px;
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
+  position: relative;
+  transition: border-color 0.22s ease, box-shadow 0.22s ease;
+}
+
+.crt-tv-btn:hover .crt-cabinet,
+.crt-tv-btn:focus-visible .crt-cabinet {
+  border-color: #fbbf24;
+  box-shadow:
+    0 18px 34px rgba(0, 0, 0, 0.68),
+    0 0 0 2px rgba(251, 191, 36, 0.42);
+}
+
+/* Cornice interna dello schermo bombato */
+.crt-screen-frame {
+  flex: 1;
+  background: #181a1f;
+  border: 2px solid #0f1115;
+  border-radius: 10px;
+  padding: 3px;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.85);
+}
+
+/* Tubo catodico acceso */
+.crt-screen {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  background: radial-gradient(circle at 50% 45%, #1e3a2f 0%, #0d1f18 75%, #07120e 100%);
+  border: 1px solid rgba(78, 240, 139, 0.35);
+  box-shadow:
+    inset 0 0 12px rgba(78, 240, 139, 0.28),
+    0 0 10px rgba(78, 240, 139, 0.14);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 4px;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Scanlines CRT */
+.crt-screen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.25) 0px,
+    rgba(0, 0, 0, 0.25) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  pointer-events: none;
+}
+
+/* Riflesso vetro bombato */
+.crt-screen::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 5px;
+  right: 12px;
+  height: 12px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, transparent 100%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.crt-tv-btn:hover .crt-screen {
+  background: radial-gradient(circle at 50% 45%, #274e3e 0%, #112a20 75%, #091712 100%);
+  box-shadow:
+    inset 0 0 16px rgba(78, 240, 139, 0.48),
+    0 0 14px rgba(78, 240, 139, 0.28);
+}
+
+.crt-ch-badge {
+  align-self: flex-end;
+  font-family: var(--font-mono);
+  font-size: 0.42rem;
+  font-weight: 700;
+  color: #86efac;
+  opacity: 0.85;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.crt-screen-title {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+  color: #4ef08b;
+  text-shadow: 0 0 8px rgba(78, 240, 139, 0.75);
+  line-height: 1.1;
+}
+
+.crt-screen-sub {
+  font-family: var(--font-mono);
+  font-size: 0.44rem;
+  font-weight: 700;
+  color: #fde047;
+  letter-spacing: 0.3px;
+  margin-top: 3px;
+  animation: crtBlink 1.8s infinite;
+}
+
+@keyframes crtBlink {
+  0%, 75%, 100% { opacity: 1; }
+  85% { opacity: 0.45; }
+}
+
+/* Pannello destro con manopole VHF/UHF e speaker */
+.crt-side-panel {
+  width: 20px;
+  background: #231a13;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 5px 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.crt-dial {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #cbd5e1 0%, #475569 80%);
+  border: 1px solid #0f172a;
+  position: relative;
+}
+
+.crt-dial::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  width: 1.5px;
+  height: 4px;
+  background: #0f172a;
+  transform: translateX(-50%) rotate(25deg);
+}
+
+.crt-grille {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 12px;
+}
+
+.crt-grille span {
+  height: 1.5px;
+  width: 100%;
+  background: #0f0b08;
+  border-radius: 1px;
+}
+
+.crt-power-led {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #ef4444;
+  box-shadow: 0 0 6px #ef4444;
+}
+
+/* Targhetta sotto la TV */
+.crt-caption {
+  background: rgba(16, 22, 32, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  padding: 4px 9px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.45);
+}
+
+.crt-caption-title {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #f8fafc;
+  letter-spacing: 0.4px;
+}
+
+.crt-caption-sub {
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  color: #86efac;
+}
+
+/* Tablet */
+@media (max-width: 1160px) and (min-width: 769px) {
+  .crt-tv-dock {
+    top: 48px;
+    left: 14px;
+  }
+}
+
+/* Smartphone: compatto in alto a sinistra simmetrico a CV_MARCO.PDF in alto a destra */
+@media (max-width: 768px) {
+  .usb-hub-stage {
+    padding-top: 46px;
+  }
+
+  .crt-tv-dock {
+    top: 46px;
+    left: 10px;
+  }
+
+  .crt-antennas,
+  .crt-side-panel,
+  .crt-ch-badge,
+  .crt-screen-sub {
+    display: none;
+  }
+
+  .crt-tv-btn {
+    flex-direction: row;
+    gap: 6px;
+    background: rgba(16, 22, 32, 0.92);
+    border: 1px solid rgba(78, 240, 139, 0.45);
+    border-radius: 9px;
+    padding: 5px 8px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  }
+
+  .crt-cabinet {
+    width: 34px;
+    height: 34px;
+    padding: 3px;
+    border-radius: 6px;
+    border-width: 1.5px;
+    box-shadow: none;
+  }
+
+  .crt-screen-frame {
+    padding: 1px;
+    border-radius: 4px;
+    border-width: 1px;
+  }
+
+  .crt-screen {
+    border-radius: 3px;
+    padding: 1px;
+  }
+
+  .crt-screen-title {
+    font-size: 0.42rem;
+    letter-spacing: 0;
+  }
+
+  .crt-caption {
     background: transparent;
     border: none;
     box-shadow: none;

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lessons &amp; Tutorials | Marco De Gregorio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="lessons.css" />
+</head>
+<body>
+  <header class="lessons-topbar">
+    <div class="lessons-topbar-inner">
+      <a href="index.html" class="back-btn">
+        <span>←</span>
+        <span>Torna al Portfolio OS</span>
+      </a>
+
+      <div class="topbar-brand">
+        <span class="tv-badge">CH 03</span>
+        <span>LESSONS.TV</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="lessons-container">
+    <section class="lessons-header">
+      <div>
+        <p class="lessons-kicker">VIDEO ARCHIVE // TUTORIALS &amp; LESSONS</p>
+        <h1 class="lessons-title">Lessons &amp; Video Tutorial</h1>
+        <p class="lessons-subtitle">
+          Lezioni pratiche e approfondimenti su Control Systems, Kalman Filter, spettroscopia EIS e sistemi embedded.
+        </p>
+      </div>
+
+      <nav class="filter-bar" id="filter-bar" aria-label="Filtra lezioni per categoria">
+        <!-- Pulsanti categoria generati dinamicamente -->
+      </nav>
+    </section>
+
+    <section class="lessons-grid" id="lessons-grid" aria-label="Griglia video YouTube">
+      <!-- Card video generate da js/lessons-data.js -->
+    </section>
+  </main>
+
+  <script src="js/lessons-data.js"></script>
+  <script>
+    (function () {
+      const lessons = window.LESSONS_DATA || [];
+      const grid = document.getElementById('lessons-grid');
+      const filterBar = document.getElementById('filter-bar');
+      let activeCategory = 'Tutti';
+
+      /**
+       * Estrae l'ID video YouTube da qualsiasi formato di link (watch, youtu.be, embed, shorts)
+       * oppure restituisce direttamente l'ID se passato in formato breve.
+       */
+      function extractYouTubeId(input) {
+        if (!input) return '';
+        const trimmed = input.trim();
+        const match = trimmed.match(
+          /(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/|shorts\/|v\/))([a-zA-Z0-9_-]{11})/
+        );
+        if (match && match[1]) return match[1];
+        if (/^[a-zA-Z0-9_-]{11}$/.test(trimmed)) return trimmed;
+        return '';
+      }
+
+      function renderFilters() {
+        const categories = ['Tutti', ...new Set(lessons.map((item) => item.category))];
+        filterBar.innerHTML = '';
+
+        categories.forEach((cat) => {
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'filter-btn' + (cat === activeCategory ? ' active' : '');
+          btn.textContent = cat;
+          btn.addEventListener('click', () => {
+            activeCategory = cat;
+            renderFilters();
+            renderGrid();
+          });
+          filterBar.appendChild(btn);
+        });
+      }
+
+      function renderGrid() {
+        const filtered =
+          activeCategory === 'Tutti'
+            ? lessons
+            : lessons.filter((item) => item.category === activeCategory);
+
+        grid.innerHTML = '';
+
+        filtered.forEach((item, index) => {
+          const videoId = extractYouTubeId(item.youtube);
+          const card = document.createElement('article');
+          card.className = 'video-card';
+
+          const mediaHtml = videoId
+            ? `<iframe
+                src="https://www.youtube-nocookie.com/embed/${videoId}"
+                title="${item.title}"
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+              ></iframe>`
+            : `<div class="video-placeholder">
+                <span class="placeholder-play" aria-hidden="true">▶</span>
+                <span class="placeholder-ep">${item.episode || 'VIDEO ' + String(index + 1).padStart(2, '0')}</span>
+                <span class="placeholder-hint">Incolla il link YouTube in <code>js/lessons-data.js</code></span>
+              </div>`;
+
+          card.innerHTML = `
+            <div class="video-frame-wrap">
+              ${mediaHtml}
+            </div>
+            <div class="video-body">
+              <div class="video-meta">
+                <span class="video-cat">${item.category}</span>
+                ${item.duration ? `<span class="video-dur">${item.duration}</span>` : ''}
+              </div>
+              <h2 class="video-title">${item.title}</h2>
+              <p class="video-desc">${item.description}</p>
+            </div>
+          `;
+
+          grid.appendChild(card);
+        });
+      }
+
+      renderFilters();
+      renderGrid();
+    })();
+  </script>
+</body>
+</html>
