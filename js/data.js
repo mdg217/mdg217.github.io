@@ -196,9 +196,8 @@ window.PORTFOLIO_DATA = [
         },
         {
           label: 'Telefono',
-          value: '+39 351 870 7898',
+          value: '+39 ..... (request it)',
           actionType: 'copy',
-          copyValue: '+393518707898'
         },
         {
           label: 'GitHub',
