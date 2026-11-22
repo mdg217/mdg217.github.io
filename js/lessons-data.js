@@ -16,7 +16,7 @@ window.LESSONS_DATA = [
     title: 'Definizione di vettore con Somma e Sottrazione',
   },
   {
-    youtube: '',
+    youtube: 'https://www.youtube.com/watch?v=lvB247RuzAk',
     episode: 'EP. 01',
     category: 'Matematica',
     duration: '01:00',
